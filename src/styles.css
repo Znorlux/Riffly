@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@layer components {
+  .font-heading {
+    @apply tracking-wide;
+  }
+}
+@tailwind utilities;
+
+@font-face {
+  font-family: "Nohemi-Bold";
+  src: url("./assets/fonts/Nohemi-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+  font-weight: 500;
+  font-style: normal;
+}
