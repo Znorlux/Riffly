@@ -84,9 +84,9 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 ## 🙏 Agradecimientos
 
 - Inspirado en [Riffusion](https://github.com/riffusion/riffusion)
-- Comunidad de desarrolladores de Angular
-- Contribuidores y usuarios de la plataforma
+- Profesor de Desarrollo web.
+- David Torres.
 
 ---
 
-Hecho con ❤️ por el equipo de Riffly (Grupo Koyso)
+Hecho con ❤️ por el equipo de Riffly (**Grupo Koyso**)
