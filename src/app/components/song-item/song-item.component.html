@@ -1,1 +1,79 @@
-<p>song-item works!</p>
+<div class="flex items-center p-3 rounded-lg hover:bg-gray-800 group">
+  <div class="w-6 mr-4 text-center text-gray-500">
+    {{ index + 1 }}
+  </div>
+  <div class="relative flex-shrink-0 w-16 h-16 mr-4">
+    <img
+      [src]="song.coverImage"
+      alt="Cover image"
+      class="object-cover w-full h-full rounded-md"
+    />
+    <button
+      class="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 rounded-md opacity-0 group-hover:opacity-100"
+    >
+      <svg
+        class="w-8 h-8 text-yellow-500"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+  </div>
+  <div class="flex-1 min-w-0">
+    <h3 class="font-medium text-white truncate">{{ song.title }}</h3>
+    <div class="flex items-center text-sm text-gray-400">
+      <img
+        [src]="song.creator.avatar"
+        alt="Creator"
+        class="w-5 h-5 mr-2 rounded-full"
+      />
+      <span>{{ song.creator.name }}</span>
+      <span class="mx-2">•</span>
+      <span>{{ song.tags.join(", ") }}</span>
+    </div>
+  </div>
+  <div class="flex items-center ml-4">
+    <div class="flex items-center mr-4 text-sm text-gray-400">
+      <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      {{ song.duration }}
+    </div>
+    <div class="flex items-center mr-4 text-sm text-gray-400">
+      <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+        <path
+          fill-rule="evenodd"
+          d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      {{ song.plays }}
+    </div>
+    <button class="mr-3 text-gray-400 hover:text-yellow-500">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          fill-rule="evenodd"
+          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+    <button class="text-gray-400 hover:text-white">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+        />
+      </svg>
+    </button>
+  </div>
+</div>

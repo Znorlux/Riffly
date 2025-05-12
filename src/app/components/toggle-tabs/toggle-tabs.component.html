@@ -1,1 +1,12 @@
-<p>toggle-tabs works!</p>
+<div class="flex mb-6 border-b border-gray-800">
+  <button
+    *ngFor="let tab of tabs"
+    (click)="onTabClick(tab.id)"
+    [class.border-yellow-500]="activeTab === tab.id"
+    [class.text-white]="activeTab === tab.id"
+    [class.text-gray-400]="activeTab !== tab.id"
+    class="px-4 py-2 text-lg font-medium transition-colors border-b-2 border-transparent hover:text-white focus:outline-none"
+  >
+    {{ tab.label }}
+  </button>
+</div>
