@@ -33,18 +33,6 @@
         <app-featured-carousel></app-featured-carousel>
       </section>
 
-      <!-- Tabs for Songs/Playlists -->
-      <div class="mb-4">
-        <app-toggle-tabs
-          [tabs]="[
-            { id: 'songs', label: 'Songs' },
-            { id: 'playlists', label: 'Playlists' }
-          ]"
-          [activeTab]="activeTab"
-          (tabChange)="setActiveTab($event)"
-        ></app-toggle-tabs>
-      </div>
-
       <!-- Filter options -->
       <div class="flex flex-wrap gap-2 mb-6">
         <button
@@ -79,17 +67,12 @@
         </button>
       </div>
 
-      <!-- Songs list (shown when activeTab is 'songs') -->
-      <app-song-list *ngIf="activeTab === 'songs'"></app-song-list>
+      <!-- Songs list -->
+      <section>
+        <h2 class="mb-4 text-2xl font-bold text-white">Latest Songs</h2>
 
-      <!-- Playlists (shown when activeTab is 'playlists') -->
-      <div
-        *ngIf="activeTab === 'playlists'"
-        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
-      >
-        <!-- Playlist items go here -->
-        <!-- This would be a separate component like app-playlist-item -->
-      </div>
+        <app-song-list></app-song-list>
+      </section>
     </main>
   </div>
 </div>

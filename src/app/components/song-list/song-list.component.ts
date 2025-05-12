@@ -1,17 +1,35 @@
+// src/app/components/song-list/song-list.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Song } from '../song-item/song-item.component';
+import { CommonModule } from '@angular/common';
+import { Song } from '../../models/song.model';
 import { SongItemComponent } from '../song-item/song-item.component';
 
 @Component({
   selector: 'app-song-list',
-  templateUrl: './song-list.component.html',
   standalone: true,
-  imports: [SongItemComponent],
+  imports: [CommonModule, SongItemComponent],
+  template: `
+    <div class="space-y-2">
+      <app-song-item
+        *ngFor="let song of songs; let i = index"
+        [song]="song"
+        [index]="i"
+      ></app-song-item>
+    </div>
+  `,
 })
 export class SongListComponent implements OnInit {
   songs: Song[] = [];
 
   ngOnInit(): void {
+    // Add this to provide fallback images if your assets don't exist yet
+    this.songs.forEach((song) => {
+      song.coverImage =
+        song.coverImage || 'https://placehold.co/400x400/333/yellow?text=Cover';
+      song.creator.avatar =
+        song.creator.avatar ||
+        'https://placehold.co/100x100/333/yellow?text=User';
+    });
     // This would typically come from a service
     this.songs = [
       {
