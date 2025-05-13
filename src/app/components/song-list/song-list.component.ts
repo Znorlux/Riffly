@@ -34,11 +34,11 @@ export class SongListComponent implements OnInit {
     this.songs = [
       {
         id: '1',
-        title: 'Summer Vibes',
-        coverImage: 'assets/img/cover1.jpg',
+        title: 'Doomed',
+        coverImage: 'assets/songs/spirit.jpg',
         creator: {
-          name: 'MelodyMaster',
-          avatar: 'assets/img/avatar1.jpg',
+          name: 'Thats the sprit',
+          avatar: 'assets/songs/spirit.jpg',
         },
         tags: ['Lo-fi', 'Chill', 'Summer'],
         duration: '3:25',
@@ -47,11 +47,11 @@ export class SongListComponent implements OnInit {
       },
       {
         id: '2',
-        title: 'Neon Dreams',
-        coverImage: 'assets/img/cover2.jpg',
+        title: 'The jaws of life',
+        coverImage: 'assets/songs/jaws.jpg',
         creator: {
-          name: 'BeatCrafter',
-          avatar: 'assets/img/avatar2.jpg',
+          name: 'The jaws of life',
+          avatar: 'assets/songs/jaws.jpg',
         },
         tags: ['Synthwave', 'Electronic'],
         duration: '4:10',
@@ -60,11 +60,11 @@ export class SongListComponent implements OnInit {
       },
       {
         id: '3',
-        title: 'Urban Rhythm',
-        coverImage: 'assets/img/cover3.jpg',
+        title: 'The death of a bachelor',
+        coverImage: 'assets/songs/bachelor.jpg',
         creator: {
-          name: 'UrbanSound',
-          avatar: 'assets/img/avatar3.jpg',
+          name: 'The death of a bachelor',
+          avatar: 'assets/songs/bachelor.jpg',
         },
         tags: ['Hip-hop', 'Jazz'],
         duration: '2:55',
