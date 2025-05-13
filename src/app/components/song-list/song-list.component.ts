@@ -35,10 +35,10 @@ export class SongListComponent implements OnInit {
       {
         id: '1',
         title: 'Doomed',
-        coverImage: 'assets/songs/spirit.jpg',
+        coverImage: 'songs/spirit.jpg',
         creator: {
           name: 'Thats the sprit',
-          avatar: 'assets/songs/spirit.jpg',
+          avatar: 'songs/spirit.jpg',
         },
         tags: ['Lo-fi', 'Chill', 'Summer'],
         duration: '3:25',
@@ -48,10 +48,10 @@ export class SongListComponent implements OnInit {
       {
         id: '2',
         title: 'The jaws of life',
-        coverImage: 'assets/songs/jaws.jpg',
+        coverImage: 'songs/jaws.jpg',
         creator: {
           name: 'The jaws of life',
-          avatar: 'assets/songs/jaws.jpg',
+          avatar: 'songs/jaws.jpg',
         },
         tags: ['Synthwave', 'Electronic'],
         duration: '4:10',
@@ -60,11 +60,11 @@ export class SongListComponent implements OnInit {
       },
       {
         id: '3',
-        title: 'The death of a bachelor',
-        coverImage: 'assets/songs/bachelor.jpg',
+        title: 'To The Hellfire',
+        coverImage: 'songs/amanecer.jpg',
         creator: {
-          name: 'The death of a bachelor',
-          avatar: 'assets/songs/bachelor.jpg',
+          name: 'To the hellfire',
+          avatar: 'songs/amanecer.jpg',
         },
         tags: ['Hip-hop', 'Jazz'],
         duration: '2:55',
