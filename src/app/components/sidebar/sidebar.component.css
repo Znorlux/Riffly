@@ -1,0 +1,54 @@
+/* Sidebar base y estados */
+.sidebar {
+  width: 16rem; /* w-64 = 256px */
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar.collapsed {
+  width: 4rem; /* w-16 = 64px */
+}
+
+/* Animaciones para elementos internos */
+.sidebar-text {
+  transition: all 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  margin-left: 0;
+}
+
+.sidebar-icon {
+  transition: margin 0.3s ease-in-out;
+}
+
+.sidebar.collapsed .sidebar-icon {
+  margin-right: 0;
+}
+
+/* Padding ajustado para sidebar colapsado */
+.sidebar.collapsed > div {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Tooltip para items cuando está colapsado */
+.sidebar.collapsed [title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-left: 0.5rem;
+  pointer-events: none;
+}
