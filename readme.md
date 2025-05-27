@@ -1,6 +1,6 @@
 # 🎵 Riffly - Tu Comunidad Musical con IA
 
-![Riffly Banner](assets/banner.png)
+![Riffly Banner](RifflyBanner.png)
 
 ## 🌟 Descripción
 
