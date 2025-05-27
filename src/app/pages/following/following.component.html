@@ -1,0 +1,246 @@
+<div class="flex h-screen bg-gray-900">
+  <!-- Sidebar component -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main content area -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Top navigation -->
+    <app-topbar></app-topbar>
+
+    <!-- Main following content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <!-- Header Section -->
+      <div class="mb-8">
+        <h1 class="mb-2 text-3xl font-bold text-white">Siguiendo</h1>
+        <p class="text-gray-400">
+          Mantente al día con tus artistas favoritos y descubre sus últimas
+          creaciones
+        </p>
+      </div>
+
+      <!-- Controls Section -->
+      <div
+        class="mb-6 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:justify-between"
+      >
+        <!-- Search Bar -->
+        <div class="relative max-w-md">
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          >
+            <app-icon
+              name="search"
+              size="5"
+              customClass="text-gray-400"
+            ></app-icon>
+          </div>
+          <input
+            #searchInput
+            type="text"
+            placeholder="Buscar artistas..."
+            (input)="onSearch(searchInput.value)"
+            class="w-full py-2 pl-10 pr-4 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+          />
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex space-x-2">
+          <button
+            (click)="onFilterChange('all')"
+            [class.bg-yellow-500]="selectedFilter === 'all'"
+            [class.text-gray-900]="selectedFilter === 'all'"
+            [class.bg-gray-800]="selectedFilter !== 'all'"
+            [class.text-gray-300]="selectedFilter !== 'all'"
+            class="px-4 py-2 font-medium transition-colors duration-200 rounded-lg hover:bg-yellow-500 hover:text-gray-900"
+          >
+            Todos ({{ followedArtists.length }})
+          </button>
+          <button
+            (click)="onFilterChange('online')"
+            [class.bg-yellow-500]="selectedFilter === 'online'"
+            [class.text-gray-900]="selectedFilter === 'online'"
+            [class.bg-gray-800]="selectedFilter !== 'online'"
+            [class.text-gray-300]="selectedFilter !== 'online'"
+            class="px-4 py-2 font-medium transition-colors duration-200 rounded-lg hover:bg-yellow-500 hover:text-gray-900"
+          >
+            En línea
+          </button>
+          <button
+            (click)="onFilterChange('recent-activity')"
+            [class.bg-yellow-500]="selectedFilter === 'recent-activity'"
+            [class.text-gray-900]="selectedFilter === 'recent-activity'"
+            [class.bg-gray-800]="selectedFilter !== 'recent-activity'"
+            [class.text-gray-300]="selectedFilter !== 'recent-activity'"
+            class="px-4 py-2 font-medium transition-colors duration-200 rounded-lg hover:bg-yellow-500 hover:text-gray-900"
+          >
+            Actividad reciente
+          </button>
+        </div>
+      </div>
+
+      <!-- Artists Grid -->
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div
+          *ngFor="let artist of filteredArtists; trackBy: trackArtist"
+          class="overflow-hidden transition-shadow duration-300 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl group"
+        >
+          <!-- Cover Image -->
+          <div
+            class="relative h-32 bg-gradient-to-br from-gray-700 to-gray-800"
+          >
+            <img
+              [src]="artist.coverImage"
+              [alt]="artist.name + ' cover'"
+              class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            />
+            <!-- Online Status -->
+            <div
+              *ngIf="artist.isOnline"
+              class="absolute flex items-center px-2 py-1 space-x-1 text-xs text-white bg-green-500 rounded-full top-3 right-3"
+            >
+              <div class="w-2 h-2 bg-white rounded-full"></div>
+              <span>En línea</span>
+            </div>
+          </div>
+
+          <!-- Artist Info -->
+          <div class="p-4">
+            <!-- Avatar and Basic Info -->
+            <div class="flex items-start mb-3 space-x-3">
+              <div class="relative flex-shrink-0">
+                <img
+                  [src]="artist.avatar"
+                  [alt]="artist.name"
+                  class="object-cover w-12 h-12 border-2 border-gray-700 rounded-full"
+                />
+                <div
+                  *ngIf="artist.isOnline"
+                  class="absolute w-4 h-4 bg-green-500 border-2 border-gray-800 rounded-full -bottom-1 -right-1"
+                ></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center mb-1 space-x-1">
+                  <h3 class="font-semibold text-white truncate">
+                    {{ artist.name }}
+                  </h3>
+                  <app-icon
+                    *ngIf="artist.isVerified"
+                    name="star"
+                    size="4"
+                    customClass="text-yellow-500 flex-shrink-0"
+                  ></app-icon>
+                </div>
+                <p class="text-sm text-gray-400">{{ artist.username }}</p>
+                <p class="text-xs text-gray-500">{{ artist.lastActive }}</p>
+              </div>
+            </div>
+
+            <!-- Bio -->
+            <p class="mb-3 text-sm text-gray-300 line-clamp-2">
+              {{ artist.bio }}
+            </p>
+
+            <!-- Genres -->
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span
+                *ngFor="let genre of artist.genres.slice(0, 3)"
+                class="inline-block px-2 py-1 text-xs text-gray-300 bg-gray-700 rounded-full"
+              >
+                {{ genre }}
+              </span>
+            </div>
+
+            <!-- Stats -->
+            <div
+              class="flex items-center justify-between mb-4 text-sm text-gray-400"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-1">
+                  <app-icon name="users" size="4"></app-icon>
+                  <span>{{ formatNumber(artist.followersCount) }}</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                  <app-icon name="music" size="4"></app-icon>
+                  <span>{{ artist.songsCount }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Latest Song (if available) -->
+            <div
+              *ngIf="artist.latestSong"
+              class="p-3 mb-4 bg-gray-700 rounded-lg"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-gray-400 uppercase"
+                  >Último lanzamiento</span
+                >
+                <span class="text-xs text-gray-400">{{
+                  getRelativeTime(artist.latestSong.createdAt)
+                }}</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <img
+                  [src]="artist.latestSong.coverImage"
+                  [alt]="artist.latestSong.title"
+                  class="object-cover w-10 h-10 rounded"
+                />
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-sm font-medium text-white truncate">
+                    {{ artist.latestSong.title }}
+                  </h4>
+                  <div
+                    class="flex items-center space-x-2 text-xs text-gray-400"
+                  >
+                    <span>{{ artist.latestSong.duration }}</span>
+                    <span>•</span>
+                    <div class="flex items-center space-x-1">
+                      <app-icon name="views" size="3"></app-icon>
+                      <span>{{ formatNumber(artist.latestSong.plays) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  (click)="playLatestSong(artist)"
+                  class="flex items-center justify-center w-8 h-8 text-gray-900 transition-colors duration-200 bg-yellow-500 rounded-full hover:bg-yellow-600"
+                >
+                  <app-icon name="play" size="4"></app-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Follow Button -->
+            <button
+              (click)="toggleFollow(artist)"
+              [class.bg-yellow-500]="artist.isFollowing"
+              [class.text-gray-900]="artist.isFollowing"
+              [class.hover:bg-yellow-600]="artist.isFollowing"
+              [class.bg-gray-700]="!artist.isFollowing"
+              [class.text-white]="!artist.isFollowing"
+              [class.hover:bg-gray-600]="!artist.isFollowing"
+              class="w-full px-4 py-2 font-medium transition-colors duration-200 rounded-lg"
+            >
+              {{ artist.isFollowing ? "Siguiendo" : "Seguir" }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredArtists.length === 0" class="py-12 text-center">
+        <div class="max-w-md mx-auto">
+          <app-icon
+            name="users"
+            size="16"
+            customClass="text-gray-600 mx-auto mb-4"
+          ></app-icon>
+          <h3 class="mb-2 text-xl font-semibold text-gray-400">
+            No hay artistas
+          </h3>
+          <p class="text-gray-500">
+            No se encontraron artistas que coincidan con tu búsqueda o filtro.
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
