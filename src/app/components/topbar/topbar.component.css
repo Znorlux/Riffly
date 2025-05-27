@@ -1,0 +1,35 @@
+/* Animación para el menú desplegable */
+.user-menu-container {
+  position: relative;
+}
+
+/* Efecto de aparición del menú */
+.user-menu-container [ngIf] {
+  animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sombra personalizada para el menú */
+.user-menu-container > div {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover effects para los items del menú */
+.user-menu-container button:hover {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Separador del menú */
+.user-menu-container .border-t {
+  border-top-width: 1px;
+}

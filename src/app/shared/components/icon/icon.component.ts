@@ -20,7 +20,8 @@ export type IconName =
   | 'menu'
   | 'clock'
   | 'views'
-  | 'logo';
+  | 'logo'
+  | 'logout';
 
 @Component({
   selector: 'app-icon',
@@ -180,6 +181,15 @@ export type IconName =
         <path
           *ngSwitchCase="'logo'"
           d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"
+        ></path>
+
+        <!-- Logout -->
+        <path
+          *ngSwitchCase="'logout'"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
         ></path>
       </ng-container>
     </svg>

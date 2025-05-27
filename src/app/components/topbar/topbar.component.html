@@ -85,10 +85,80 @@
         />
       </svg>
     </button>
-    <button
-      class="flex items-center justify-center w-8 h-8 text-white bg-yellow-600 rounded-full"
-    >
-      <span class="text-sm font-medium">JS</span>
-    </button>
+    <!-- User Menu -->
+    <div class="relative user-menu-container">
+      <button
+        (click)="toggleUserMenu()"
+        class="flex items-center justify-center w-8 h-8 text-white bg-yellow-600 rounded-full hover:bg-yellow-700 transition-colors duration-200"
+        [title]="currentUser?.username || 'Usuario'"
+      >
+        <img
+          *ngIf="currentUser?.profileImage"
+          [src]="getUserAvatar()"
+          [alt]="currentUser?.username"
+          class="w-8 h-8 rounded-full object-cover"
+        />
+        <span *ngIf="!currentUser?.profileImage" class="text-sm font-medium">
+          {{ getUserInitials() }}
+        </span>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div
+        *ngIf="isUserMenuOpen"
+        class="absolute right-0 mt-2 w-64 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50"
+      >
+        <!-- User Info Header -->
+        <div class="px-4 py-3 border-b border-gray-700">
+          <div class="flex items-center space-x-3">
+            <img
+              [src]="getUserAvatar()"
+              [alt]="currentUser?.username"
+              class="w-10 h-10 rounded-full object-cover"
+            />
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-white truncate">
+                {{ currentUser?.username }}
+              </p>
+              <p class="text-xs text-gray-400 truncate">
+                {{ currentUser?.email }}
+              </p>
+              <p class="text-xs text-yellow-500 capitalize">
+                {{ currentUser?.role?.toLowerCase() }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Options -->
+        <div class="py-2">
+          <button
+            (click)="onProfile()"
+            class="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+          >
+            <app-icon
+              name="settings"
+              size="4"
+              customClass="mr-3 text-gray-400"
+            ></app-icon>
+            Mi Perfil
+          </button>
+
+          <div class="border-t border-gray-700 mt-2 pt-2">
+            <button
+              (click)="onLogout()"
+              class="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors duration-200"
+            >
+              <app-icon
+                name="logout"
+                size="4"
+                customClass="mr-3 text-red-400"
+              ></app-icon>
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
