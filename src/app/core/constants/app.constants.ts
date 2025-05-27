@@ -1,0 +1,92 @@
+import { MusicFilter } from '../../models/song.model';
+
+export const APP_CONFIG = {
+  name: 'Riffly',
+  version: '1.0.0',
+  description: 'Tu Comunidad Musical con IA',
+} as const;
+
+export const ROUTES = {
+  HOME: '',
+  LOGIN: 'login',
+  DASHBOARD: 'dashboard',
+  PROFILE: 'profile',
+  SETTINGS: 'settings',
+} as const;
+
+export const MUSIC_FILTERS: MusicFilter[] = [
+  { type: 'staff-picks', label: 'Staff Picks', active: true },
+  { type: 'today', label: 'Today', active: false },
+  { type: 'week', label: 'Week', active: false },
+  { type: 'month', label: 'Month', active: false },
+  { type: 'all', label: 'All', active: false },
+  { type: 'live', label: 'Live', active: false },
+];
+
+export const SIDEBAR_MENU = {
+  EXPLORE: [
+    {
+      id: 'featured',
+      label: 'Featured',
+      icon: 'star',
+      route: '/dashboard',
+      active: true,
+    },
+    {
+      id: 'following',
+      label: 'Following',
+      icon: 'users',
+      route: '/following',
+      active: false,
+    },
+    {
+      id: 'personalize',
+      label: 'Personalize',
+      icon: 'eye',
+      route: '/personalize',
+      active: false,
+    },
+  ],
+  LIBRARY: [
+    {
+      id: 'songs',
+      label: 'Songs',
+      icon: 'music',
+      route: '/library/songs',
+      active: false,
+    },
+    {
+      id: 'vibes',
+      label: 'Vibes',
+      icon: 'chat',
+      route: '/library/vibes',
+      active: false,
+    },
+    {
+      id: 'projects',
+      label: 'Projects',
+      icon: 'list',
+      route: '/library/projects',
+      active: false,
+    },
+    {
+      id: 'playlists',
+      label: 'Playlists',
+      icon: 'collection',
+      route: '/library/playlists',
+      active: false,
+    },
+  ],
+} as const;
+
+export const PLACEHOLDER_IMAGES = {
+  SONG_COVER: 'https://placehold.co/400x400/333/yellow?text=Cover',
+  USER_AVATAR: 'https://placehold.co/100x100/333/yellow?text=User',
+  AI_AVATAR: 'https://placehold.co/100x100/333/yellow?text=AI',
+} as const;
+
+export const AUDIO_CONFIG = {
+  DEFAULT_VOLUME: 0.7,
+  FADE_DURATION: 1000,
+  SUPPORTED_FORMATS: ['mp3', 'wav', 'ogg', 'flac'],
+} as const;
