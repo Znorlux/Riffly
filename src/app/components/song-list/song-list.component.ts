@@ -30,8 +30,8 @@ import { UiService } from '../../services/ui.service';
         *ngFor="let song of songs; let i = index"
         [song]="song"
         [index]="i"
-        (onPlay)="onPlaySong($event)"
-        (onLike)="onLikeSong($event)"
+        (playEvent)="onPlaySong($event)"
+        (likeEvent)="onLikeSong($event)"
       >
       </app-song-item>
     </div>

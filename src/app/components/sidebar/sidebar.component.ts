@@ -6,6 +6,14 @@ import { UiService } from '../../services/ui.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { APP_CONFIG } from '../../core/constants/app.constants';
 
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: string;
+  route: string;
+  active: boolean;
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -18,7 +26,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   appName = APP_CONFIG.name;
   sidebarCollapsed = false;
-  menuItems: any;
+  menuItems: typeof import('../../core/constants/app.constants').SIDEBAR_MENU;
 
   constructor(public uiService: UiService) {
     this.menuItems = this.uiService.getSidebarMenu();
@@ -37,7 +45,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onMenuItemClick(item: any): void {
+  onMenuItemClick(item: MenuItem): void {
     // Aquí puedes agregar lógica adicional cuando se hace clic en un item del menú
     console.log('Menu item clicked:', item);
   }

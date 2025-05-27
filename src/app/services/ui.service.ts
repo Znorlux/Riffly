@@ -22,7 +22,9 @@ export class UiService {
   private searchQuerySubject = new BehaviorSubject<string>('');
   public searchQuery$ = this.searchQuerySubject.asObservable();
 
-  constructor() {}
+  constructor() {
+    // Constructor inicializado con valores por defecto
+  }
 
   toggleSidebar(): void {
     this.sidebarCollapsedSubject.next(!this.sidebarCollapsedSubject.value);

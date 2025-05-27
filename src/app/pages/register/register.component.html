@@ -1,0 +1,280 @@
+<div
+  class="flex items-center justify-center min-h-screen px-4 py-12 bg-gray-900 sm:px-6 lg:px-8"
+>
+  <div class="w-full max-w-md space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <div class="flex items-center justify-center mb-6">
+        <app-icon
+          name="logo"
+          size="12"
+          customClass="text-yellow-500 mr-3"
+          viewBox="0 0 24 24"
+        >
+        </app-icon>
+        <h1 class="text-3xl font-bold text-white font-heading">
+          {{ appName }}
+        </h1>
+      </div>
+      <h2 class="text-2xl font-bold text-white">Crea tu cuenta</h2>
+      <p class="mt-2 text-gray-400">Únete a la comunidad musical con IA</p>
+    </div>
+
+    <!-- Error Message -->
+    <div
+      *ngIf="errorMessage"
+      class="px-4 py-3 text-red-200 border border-red-500 rounded-lg bg-red-900/50"
+    >
+      <div class="flex items-center">
+        <app-icon
+          name="bell"
+          size="5"
+          customClass="mr-2 text-red-400"
+        ></app-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Email -->
+      <div>
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-300">
+          Email *
+        </label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="tu@email.com"
+          class="w-full px-4 py-3 text-white placeholder-gray-400 transition-colors duration-200 bg-gray-800 border rounded-lg focus:outline-none focus:ring-2"
+          [class.border-gray-600]="!isFieldInvalid('email')"
+          [class.focus:border-yellow-500]="!isFieldInvalid('email')"
+          [class.focus:ring-yellow-500]="!isFieldInvalid('email')"
+          [class.border-red-500]="isFieldInvalid('email')"
+          [class.focus:border-red-500]="isFieldInvalid('email')"
+          [class.focus:ring-red-500]="isFieldInvalid('email')"
+        />
+        <p *ngIf="getFieldError('email')" class="mt-1 text-sm text-red-400">
+          {{ getFieldError("email") }}
+        </p>
+      </div>
+
+      <!-- Username -->
+      <div>
+        <label
+          for="username"
+          class="block mb-2 text-sm font-medium text-gray-300"
+        >
+          Nombre de usuario *
+        </label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          placeholder="tu_username"
+          class="w-full px-4 py-3 text-white placeholder-gray-400 transition-colors duration-200 bg-gray-800 border rounded-lg focus:outline-none focus:ring-2"
+          [class.border-gray-600]="!isFieldInvalid('username')"
+          [class.focus:border-yellow-500]="!isFieldInvalid('username')"
+          [class.focus:ring-yellow-500]="!isFieldInvalid('username')"
+          [class.border-red-500]="isFieldInvalid('username')"
+          [class.focus:border-red-500]="isFieldInvalid('username')"
+          [class.focus:ring-red-500]="isFieldInvalid('username')"
+        />
+        <p *ngIf="getFieldError('username')" class="mt-1 text-sm text-red-400">
+          {{ getFieldError("username") }}
+        </p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label
+          for="password"
+          class="block mb-2 text-sm font-medium text-gray-300"
+        >
+          Contraseña *
+        </label>
+        <div class="relative">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="••••••••"
+            class="w-full px-4 py-3 pr-12 text-white placeholder-gray-400 transition-colors duration-200 bg-gray-800 border rounded-lg focus:outline-none focus:ring-2"
+            [class.border-gray-600]="!isFieldInvalid('password')"
+            [class.focus:border-yellow-500]="!isFieldInvalid('password')"
+            [class.focus:ring-yellow-500]="!isFieldInvalid('password')"
+            [class.border-red-500]="isFieldInvalid('password')"
+            [class.focus:border-red-500]="isFieldInvalid('password')"
+            [class.focus:ring-red-500]="isFieldInvalid('password')"
+          />
+          <button
+            type="button"
+            (click)="togglePasswordVisibility()"
+            class="absolute text-gray-400 transition-colors duration-200 transform -translate-y-1/2 right-3 top-1/2 hover:text-white"
+          >
+            <app-icon [name]="showPassword ? 'eye' : 'eye'" size="5"></app-icon>
+          </button>
+        </div>
+        <p *ngIf="getFieldError('password')" class="mt-1 text-sm text-red-400">
+          {{ getFieldError("password") }}
+        </p>
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label
+          for="confirmPassword"
+          class="block mb-2 text-sm font-medium text-gray-300"
+        >
+          Confirmar contraseña *
+        </label>
+        <div class="relative">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="••••••••"
+            class="w-full px-4 py-3 pr-12 text-white placeholder-gray-400 transition-colors duration-200 bg-gray-800 border rounded-lg focus:outline-none focus:ring-2"
+            [class.border-gray-600]="!isFieldInvalid('confirmPassword')"
+            [class.focus:border-yellow-500]="!isFieldInvalid('confirmPassword')"
+            [class.focus:ring-yellow-500]="!isFieldInvalid('confirmPassword')"
+            [class.border-red-500]="isFieldInvalid('confirmPassword')"
+            [class.focus:border-red-500]="isFieldInvalid('confirmPassword')"
+            [class.focus:ring-red-500]="isFieldInvalid('confirmPassword')"
+          />
+          <button
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            class="absolute text-gray-400 transition-colors duration-200 transform -translate-y-1/2 right-3 top-1/2 hover:text-white"
+          >
+            <app-icon
+              [name]="showConfirmPassword ? 'eye' : 'eye'"
+              size="5"
+            ></app-icon>
+          </button>
+        </div>
+        <p
+          *ngIf="getFieldError('confirmPassword')"
+          class="mt-1 text-sm text-red-400"
+        >
+          {{ getFieldError("confirmPassword") }}
+        </p>
+      </div>
+
+      <!-- Role Selection -->
+      <div>
+        <label for="role" class="block mb-2 text-sm font-medium text-gray-300">
+          ¿Cuál es tu rol en la música? *
+        </label>
+        <select
+          id="role"
+          formControlName="role"
+          class="w-full px-4 py-3 text-white transition-colors duration-200 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:border-yellow-500 focus:ring-yellow-500/20"
+        >
+          <option *ngFor="let role of userRoles" [value]="role.value">
+            {{ role.label }} - {{ role.description }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Profile Image (Optional) -->
+      <div>
+        <label
+          for="profileImage"
+          class="block mb-2 text-sm font-medium text-gray-300"
+        >
+          URL de imagen de perfil (opcional)
+        </label>
+        <input
+          id="profileImage"
+          type="url"
+          formControlName="profileImage"
+          placeholder="https://ejemplo.com/mi-foto.jpg"
+          class="w-full px-4 py-3 text-white placeholder-gray-400 transition-colors duration-200 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:border-yellow-500 focus:ring-yellow-500/20"
+        />
+      </div>
+
+      <!-- Bio (Optional) -->
+      <div>
+        <label for="bio" class="block mb-2 text-sm font-medium text-gray-300">
+          Biografía (opcional)
+        </label>
+        <textarea
+          id="bio"
+          formControlName="bio"
+          rows="3"
+          placeholder="Cuéntanos sobre ti y tu pasión por la música..."
+          class="w-full px-4 py-3 text-white placeholder-gray-400 transition-colors duration-200 bg-gray-800 border rounded-lg resize-none focus:outline-none focus:ring-2"
+          [class.border-gray-600]="!isFieldInvalid('bio')"
+          [class.focus:border-yellow-500]="!isFieldInvalid('bio')"
+          [class.focus:ring-yellow-500]="!isFieldInvalid('bio')"
+          [class.border-red-500]="isFieldInvalid('bio')"
+          [class.focus:border-red-500]="isFieldInvalid('bio')"
+          [class.focus:ring-red-500]="isFieldInvalid('bio')"
+        >
+        </textarea>
+        <p *ngIf="getFieldError('bio')" class="mt-1 text-sm text-red-400">
+          {{ getFieldError("bio") }}
+        </p>
+        <p class="mt-1 text-xs text-gray-500">
+          {{ registerForm.get("bio")?.value?.length || 0 }}/500 caracteres
+        </p>
+      </div>
+
+      <!-- Terms and Conditions -->
+      <div class="flex items-start">
+        <input
+          id="acceptTerms"
+          type="checkbox"
+          formControlName="acceptTerms"
+          class="w-4 h-4 mt-1 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500 focus:ring-2"
+        />
+        <label for="acceptTerms" class="ml-3 text-sm text-gray-300">
+          Acepto los
+          <a href="#" class="text-yellow-500 underline hover:text-yellow-400"
+            >términos y condiciones</a
+          >
+          y la
+          <a href="#" class="text-yellow-500 underline hover:text-yellow-400"
+            >política de privacidad</a
+          >
+        </label>
+      </div>
+      <p *ngIf="getFieldError('acceptTerms')" class="text-sm text-red-400">
+        {{ getFieldError("acceptTerms") }}
+      </p>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isLoading || registerForm.invalid"
+        class="w-full px-4 py-3 font-medium text-gray-900 transition-all duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <span *ngIf="!isLoading" class="flex items-center justify-center">
+          <app-icon name="star" size="5" customClass="mr-2"></app-icon>
+          Crear cuenta
+        </span>
+        <span *ngIf="isLoading" class="flex items-center justify-center">
+          <div
+            class="w-5 h-5 mr-2 border-b-2 border-gray-900 rounded-full animate-spin"
+          ></div>
+          Creando cuenta...
+        </span>
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="text-center">
+      <p class="text-gray-400">
+        ¿Ya tienes una cuenta?
+        <a
+          routerLink="/login"
+          class="font-medium text-yellow-500 transition-colors duration-200 hover:text-yellow-400"
+        >
+          Inicia sesión
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

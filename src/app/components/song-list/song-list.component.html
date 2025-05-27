@@ -3,5 +3,7 @@
     *ngFor="let song of songs; let i = index"
     [song]="song"
     [index]="i"
+    (playEvent)="onPlay($event)"
+    (likeEvent)="onLike($event)"
   ></app-song-item>
 </div>

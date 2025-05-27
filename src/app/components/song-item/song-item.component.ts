@@ -70,16 +70,16 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 })
 export class SongItemComponent {
   @Input() song!: Song;
-  @Input() index: number = 0;
+  @Input() index = 0;
 
-  @Output() onPlay = new EventEmitter<Song>();
-  @Output() onLike = new EventEmitter<string>();
+  @Output() playEvent = new EventEmitter<Song>();
+  @Output() likeEvent = new EventEmitter<string>();
 
   playPause(): void {
-    this.onPlay.emit(this.song);
+    this.playEvent.emit(this.song);
   }
 
   toggleLike(): void {
-    this.onLike.emit(this.song.id);
+    this.likeEvent.emit(this.song.id);
   }
 }

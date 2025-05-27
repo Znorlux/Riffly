@@ -90,3 +90,48 @@ export const AUDIO_CONFIG = {
   FADE_DURATION: 1000,
   SUPPORTED_FORMATS: ['mp3', 'wav', 'ogg', 'flac'],
 } as const;
+
+export const USER_ROLES = [
+  {
+    value: 'AFICIONADO',
+    label: 'Aficionado',
+    description: 'Disfruta y descubre nueva música',
+  },
+  {
+    value: 'PROFESIONAL',
+    label: 'Profesional',
+    description: 'Músico o artista profesional',
+  },
+  {
+    value: 'PRODUCTOR',
+    label: 'Productor',
+    description: 'Produce y mezcla música',
+  },
+  {
+    value: 'COMPOSITOR',
+    label: 'Compositor',
+    description: 'Crea y compone música original',
+  },
+] as const;
+
+export const VALIDATION_RULES = {
+  EMAIL: {
+    PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    MESSAGE: 'Ingresa un email válido',
+  },
+  USERNAME: {
+    MIN_LENGTH: 3,
+    MAX_LENGTH: 30,
+    PATTERN: /^[a-zA-Z0-9_]+$/,
+    MESSAGE:
+      'El username debe tener entre 3-30 caracteres y solo contener letras, números y guiones bajos',
+  },
+  PASSWORD: {
+    MIN_LENGTH: 8,
+    MESSAGE: 'La contraseña debe tener al menos 8 caracteres',
+  },
+  BIO: {
+    MAX_LENGTH: 500,
+    MESSAGE: 'La biografía no puede exceder 500 caracteres',
+  },
+} as const;

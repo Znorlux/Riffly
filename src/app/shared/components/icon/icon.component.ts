@@ -187,9 +187,9 @@ export type IconName =
 })
 export class IconComponent {
   @Input() name: IconName = 'star';
-  @Input() size: string = '5';
-  @Input() customClass: string = '';
-  @Input() fill: string = 'currentColor';
-  @Input() stroke: string = 'none';
-  @Input() viewBox: string = '0 0 20 20';
+  @Input() size = '5';
+  @Input() customClass = '';
+  @Input() fill = 'currentColor';
+  @Input() stroke = 'none';
+  @Input() viewBox = '0 0 20 20';
 }

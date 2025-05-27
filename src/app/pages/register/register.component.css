@@ -1,0 +1,68 @@
+/* Estilos adicionales para el componente de registro */
+
+/* Animación para el formulario */
+.space-y-8 > * + * {
+  margin-top: 2rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Estilos para el checkbox personalizado */
+input[type="checkbox"]:checked {
+  background-color: #eab308;
+  border-color: #eab308;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.max-w-md {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Estilos para el textarea */
+textarea {
+  min-height: 80px;
+}
+
+/* Hover effects para los enlaces */
+a:hover {
+  text-decoration: underline;
+}
+
+/* Focus visible para accesibilidad */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #eab308;
+  outline-offset: 2px;
+}
+
+/* Estilos para el estado disabled del botón */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Animación del spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

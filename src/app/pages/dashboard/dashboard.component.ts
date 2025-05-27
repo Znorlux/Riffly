@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .generateMusic(this.musicPrompt)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (newSong) => {
+        next: () => {
           this.uiService.showNotification(
             '¡Música generada exitosamente!',
             'success'
@@ -70,7 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.musicPrompt = '';
           this.uiService.setLoading(false);
         },
-        error: (error) => {
+        error: () => {
           this.uiService.showNotification('Error al generar música', 'error');
           this.uiService.setLoading(false);
         },
