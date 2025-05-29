@@ -23,7 +23,11 @@ export type IconName =
   | 'logo'
   | 'logout'
   | 'chevron-left'
-  | 'chevron-right';
+  | 'chevron-right'
+  | 'edit'
+  | 'microphone'
+  | 'upload'
+  | 'check';
 
 @Component({
   selector: 'app-icon',
@@ -210,6 +214,42 @@ export type IconName =
           stroke-linejoin="round"
           stroke-width="2"
           d="M9 5l7 7-7 7"
+        ></path>
+
+        <!-- Edit -->
+        <path
+          *ngSwitchCase="'edit'"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+        ></path>
+
+        <!-- Microphone -->
+        <path
+          *ngSwitchCase="'microphone'"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+        ></path>
+
+        <!-- Upload -->
+        <path
+          *ngSwitchCase="'upload'"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+        ></path>
+
+        <!-- Check -->
+        <path
+          *ngSwitchCase="'check'"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
         ></path>
       </ng-container>
     </svg>

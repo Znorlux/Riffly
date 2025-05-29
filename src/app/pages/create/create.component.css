@@ -1,0 +1,273 @@
+/* Slider personalizado */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgb(75 85 99);
+  outline: none;
+  border-radius: 5px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgb(234 179 8);
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid rgb(17 24 39);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: rgb(234 179 8);
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid rgb(17 24 39);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Animaciones personalizadas */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(234, 179, 8, 0);
+  }
+}
+
+.group:hover .group-hover\:pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Efectos de gradiente para las cards */
+.bg-gradient-card {
+  background: linear-gradient(
+    135deg,
+    rgba(55, 65, 81, 0.8) 0%,
+    rgba(75, 85, 99, 0.8) 100%
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bg-gradient-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.9) 0%,
+    rgba(107, 114, 128, 0.9) 100%
+  );
+}
+
+/* Efectos de sombra mejorados */
+.shadow-glow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 20px rgba(234, 179, 8, 0.15);
+}
+
+.shadow-glow-hover:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 30px rgba(234, 179, 8, 0.3);
+}
+
+/* Scroll personalizado para el área principal */
+main::-webkit-scrollbar {
+  width: 8px;
+}
+
+main::-webkit-scrollbar-track {
+  background: rgb(31 41 55);
+  border-radius: 4px;
+}
+
+main::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, rgb(234 179 8), rgb(202 138 4));
+  border-radius: 4px;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, rgb(252 211 77), rgb(234 179 8));
+}
+
+/* Animación para las tarjetas de género */
+.genre-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.genre-card:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Estilo para checkboxes personalizados */
+.custom-toggle input:checked + .toggle-bg {
+  background-color: rgb(234 179 8);
+}
+
+.custom-toggle input:checked + .toggle-bg:after {
+  transform: translateX(100%);
+}
+
+/* Efectos para botones de instrumentos */
+.instrument-btn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.instrument-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.instrument-btn:hover::before {
+  left: 100%;
+}
+
+/* Animación de carga con gradiente */
+.loading-gradient {
+  background: linear-gradient(
+    90deg,
+    rgb(234 179 8) 0%,
+    rgb(252 211 77) 50%,
+    rgb(234 179 8) 100%
+  );
+  background-size: 200% 100%;
+  animation: loading-shimmer 2s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Estados de focus mejorados */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: rgb(234 179 8);
+  box-shadow: 0 0 0 1px rgb(234 179 8), 0 0 0 3px rgba(234, 179, 8, 0.1);
+}
+
+/* Animaciones de entrada */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+section {
+  animation: slideInUp 0.6s ease-out;
+}
+
+section:nth-child(1) {
+  animation-delay: 0.1s;
+}
+section:nth-child(2) {
+  animation-delay: 0.2s;
+}
+section:nth-child(3) {
+  animation-delay: 0.3s;
+}
+section:nth-child(4) {
+  animation-delay: 0.4s;
+}
+section:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+/* Efectos de ripple para botones */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Mejoras responsive */
+@media (max-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .text-responsive {
+    font-size: 1.5rem;
+  }
+
+  .padding-responsive {
+    padding: 1rem;
+  }
+}
+
+/* Efectos para el drag and drop */
+.drag-over {
+  border-color: rgb(234 179 8) !important;
+  background-color: rgba(234, 179, 8, 0.1) !important;
+}
+
+.upload-area {
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: rgb(234 179 8);
+  background-color: rgba(234, 179, 8, 0.05);
+}
+
+/* Spinner personalizado */
+.custom-spinner {
+  border: 2px solid rgba(234, 179, 8, 0.3);
+  border-top: 2px solid rgb(234 179 8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
