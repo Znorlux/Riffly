@@ -84,7 +84,8 @@ export class CreateComponent implements OnDestroy {
     {
       id: 'style',
       title: 'Imitación de estilo',
-      description: 'Sube una canción de referencia para replicar su estilo',
+      description:
+        'Sube una canción de referencia para replicar su estilo (PRO)',
       icon: 'upload',
       color: 'bg-orange-500',
     },
@@ -192,6 +193,10 @@ export class CreateComponent implements OnDestroy {
       const formData = this.createForm.value;
       console.log('=== DATOS DEL FORMULARIO DE CREACIÓN ===');
       console.log('Método seleccionado:', this.selectedMethod);
+      console.log(
+        'Requiere PRO:',
+        this.selectedMethod === 'style' ? 'SÍ - Imitación de estilo' : 'NO'
+      );
       console.log('Datos del formulario:', {
         title: formData.title,
         description: formData.description,

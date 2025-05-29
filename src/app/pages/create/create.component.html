@@ -60,6 +60,14 @@
                 Recomendado
               </div>
 
+              <!-- PRO Badge -->
+              <div
+                *ngIf="method.id === 'style'"
+                class="absolute px-2 py-1 text-xs font-medium text-gray-900 bg-yellow-500 rounded-full -top-2 -left-2"
+              >
+                PRO
+              </div>
+
               <!-- Method Icon -->
               <div
                 [ngClass]="method.color"
@@ -311,11 +319,11 @@
 
         <!-- PRO Features Info -->
         <div
-          class="p-4 bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/30 rounded-xl"
+          class="p-4 border bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border-yellow-500/30 rounded-xl"
         >
           <div class="flex items-center mb-3">
             <div
-              class="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center mr-2"
+              class="flex items-center justify-center w-6 h-6 mr-2 bg-yellow-500 rounded-full"
             >
               <app-icon
                 name="star"
@@ -327,28 +335,36 @@
               Características PRO
             </h3>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
             <div class="flex items-center text-gray-300">
-              <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+              <div class="w-2 h-2 mr-2 bg-yellow-500 rounded-full"></div>
               <span>Canciones privadas y no listadas</span>
             </div>
             <div class="flex items-center text-gray-300">
-              <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+              <div class="w-2 h-2 mr-2 bg-yellow-500 rounded-full"></div>
               <span>Colaboraciones y remixes</span>
             </div>
             <div class="flex items-center text-gray-300">
-              <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+              <div class="w-2 h-2 mr-2 bg-yellow-500 rounded-full"></div>
+              <span>Imitación de estilo con archivo</span>
+            </div>
+            <div class="flex items-center text-gray-300">
+              <div class="w-2 h-2 mr-2 bg-yellow-500 rounded-full"></div>
               <span>Generación ilimitada de música</span>
             </div>
             <div class="flex items-center text-gray-300">
-              <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+              <div class="w-2 h-2 mr-2 bg-yellow-500 rounded-full"></div>
               <span>Calidad de audio premium</span>
             </div>
+            <div class="flex items-center text-gray-300">
+              <div class="w-2 h-2 mr-2 bg-yellow-500 rounded-full"></div>
+              <span>Exportación en formatos HD</span>
+            </div>
           </div>
-          <div class="mt-3 pt-3 border-t border-yellow-500/20">
+          <div class="pt-3 mt-3 border-t border-yellow-500/20">
             <button
               type="button"
-              class="px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg font-medium hover:bg-yellow-600 transition-colors duration-200"
+              class="px-4 py-2 font-medium text-gray-900 transition-colors duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600"
             >
               Actualizar a PRO
             </button>
@@ -382,11 +398,18 @@
           <div *ngIf="selectedMethod === 'style'" class="mb-6">
             <div class="block mb-2 text-sm font-medium text-gray-300">
               Archivo de referencia
+              <span
+                class="px-2 py-1 ml-2 text-xs font-medium text-gray-900 bg-yellow-500 rounded-full"
+                >PRO</span
+              >
             </div>
+            <p class="mb-3 text-xs text-yellow-500">
+              La imitación de estilo con archivo de referencia es una función
+              exclusiva para usuarios PRO
+            </p>
             <div class="flex items-center justify-center w-full">
-              <label
-                for="file-upload"
-                class="flex flex-col items-center justify-center w-full h-32 bg-gray-700 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer hover:bg-gray-600 hover:border-yellow-500"
+              <div
+                class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-not-allowed bg-gray-700/50 opacity-60"
               >
                 <div
                   class="flex flex-col items-center justify-center pt-5 pb-6"
@@ -394,24 +417,25 @@
                   <app-icon
                     name="upload"
                     size="8"
-                    customClass="text-gray-400 mb-3"
+                    customClass="text-gray-500 mb-3"
                   ></app-icon>
-                  <p class="mb-2 text-sm text-gray-400">
-                    <span class="font-semibold">Haz clic para subir</span> o
-                    arrastra y suelta
+                  <p class="mb-2 text-sm text-gray-500">
+                    <span class="font-semibold">Función PRO</span> - Subida de
+                    archivos
                   </p>
-                  <p class="text-xs text-gray-500">
-                    MP3, WAV, FLAC (MAX. 10MB)
+                  <p class="text-xs text-gray-600">
+                    Actualiza a PRO para usar esta función
                   </p>
                 </div>
-                <input
-                  id="file-upload"
-                  type="file"
-                  class="hidden"
-                  (change)="onFileUpload($event)"
-                  accept="audio/*"
-                />
-              </label>
+              </div>
+            </div>
+            <div class="mt-3 text-center">
+              <button
+                type="button"
+                class="px-4 py-2 font-medium text-gray-900 transition-colors duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600"
+              >
+                Actualizar a PRO para usar esta función
+              </button>
             </div>
           </div>
 
@@ -444,7 +468,7 @@
                 <p class="text-sm text-gray-400">
                   Otros usuarios podrán escucharla
                 </p>
-                <p class="text-xs text-yellow-500 mt-1">
+                <p class="mt-1 text-xs text-yellow-500">
                   Canciones privadas disponibles para usuarios PRO
                 </p>
               </div>
@@ -460,7 +484,7 @@
                     class="w-11 h-6 bg-yellow-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all opacity-75 cursor-not-allowed"
                   ></div>
                 </label>
-                <span class="text-xs text-gray-500 mt-1"
+                <span class="mt-1 text-xs text-gray-500"
                   >Solo usuarios PRO</span
                 >
               </div>
@@ -474,7 +498,7 @@
                 <p class="text-sm text-gray-400">
                   Otros pueden remixar tu canción
                 </p>
-                <p class="text-xs text-yellow-500 mt-1">
+                <p class="mt-1 text-xs text-yellow-500">
                   Función exclusiva para usuarios PRO
                 </p>
               </div>
@@ -491,8 +515,8 @@
                   ></div>
                 </label>
                 <div class="flex items-center mt-1">
-                  <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
-                  <span class="text-xs text-yellow-500 font-medium">PRO</span>
+                  <div class="w-3 h-3 mr-1 bg-yellow-500 rounded-full"></div>
+                  <span class="text-xs font-medium text-yellow-500">PRO</span>
                 </div>
               </div>
             </div>
