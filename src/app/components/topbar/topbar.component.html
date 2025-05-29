@@ -46,8 +46,9 @@
   <div class="flex items-center">
     <button
       class="px-4 py-2 mr-4 font-medium text-gray-900 bg-yellow-500 rounded-full hover:bg-yellow-600"
+      (click)="onStartCreating()"
     >
-      Start creating →
+      Empieza a crear →
     </button>
     <button class="mr-2 text-gray-400 hover:text-white">
       <svg
@@ -89,14 +90,14 @@
     <div class="relative user-menu-container">
       <button
         (click)="toggleUserMenu()"
-        class="flex items-center justify-center w-8 h-8 text-white bg-yellow-600 rounded-full hover:bg-yellow-700 transition-colors duration-200"
+        class="flex items-center justify-center w-8 h-8 text-white transition-colors duration-200 bg-yellow-600 rounded-full hover:bg-yellow-700"
         [title]="currentUser?.username || 'Usuario'"
       >
         <img
           *ngIf="currentUser?.profileImage"
           [src]="getUserAvatar()"
           [alt]="currentUser?.username"
-          class="w-8 h-8 rounded-full object-cover"
+          class="object-cover w-8 h-8 rounded-full"
         />
         <span *ngIf="!currentUser?.profileImage" class="text-sm font-medium">
           {{ getUserInitials() }}
@@ -106,7 +107,7 @@
       <!-- Dropdown Menu -->
       <div
         *ngIf="isUserMenuOpen"
-        class="absolute right-0 mt-2 w-64 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50"
+        class="absolute right-0 z-50 w-64 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg"
       >
         <!-- User Info Header -->
         <div class="px-4 py-3 border-b border-gray-700">
@@ -114,7 +115,7 @@
             <img
               [src]="getUserAvatar()"
               [alt]="currentUser?.username"
-              class="w-10 h-10 rounded-full object-cover"
+              class="object-cover w-10 h-10 rounded-full"
             />
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-white truncate">
@@ -134,7 +135,7 @@
         <div class="py-2">
           <button
             (click)="onProfile()"
-            class="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+            class="flex items-center w-full px-4 py-2 text-sm text-gray-300 transition-colors duration-200 hover:bg-gray-700 hover:text-white"
           >
             <app-icon
               name="settings"
@@ -144,10 +145,10 @@
             Mi Perfil
           </button>
 
-          <div class="border-t border-gray-700 mt-2 pt-2">
+          <div class="pt-2 mt-2 border-t border-gray-700">
             <button
               (click)="onLogout()"
-              class="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors duration-200"
+              class="flex items-center w-full px-4 py-2 text-sm text-red-400 transition-colors duration-200 hover:bg-gray-700 hover:text-red-300"
             >
               <app-icon
                 name="logout"

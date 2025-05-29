@@ -81,4 +81,8 @@ export class TopbarComponent implements OnInit, OnDestroy {
     this.uiService.showNotification('Función de perfil próximamente', 'info');
     this.isUserMenuOpen = false;
   }
+
+  onStartCreating(): void {
+    this.router.navigate(['/create']);
+  }
 }
