@@ -539,6 +539,60 @@
               {{ generationProgress.toFixed(0) }}% completado - La IA está
               creando tu obra maestra
             </p>
+            <div class="mt-4 text-xs text-gray-500">
+              <div *ngIf="generationProgress < 30">
+                🎵 Analizando tu prompt musical...
+              </div>
+              <div *ngIf="generationProgress >= 30 && generationProgress < 60">
+                🎨 Generando espectrograma...
+              </div>
+              <div *ngIf="generationProgress >= 60 && generationProgress < 90">
+                🎼 Creando audio...
+              </div>
+              <div *ngIf="generationProgress >= 90">
+                💾 Guardando archivos...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generation Results (opcional - para desarrollo) -->
+        <div
+          *ngIf="generatedPrompt && !isGenerating"
+          class="p-6 bg-gray-800 rounded-xl"
+        >
+          <h3 class="mb-4 text-xl font-semibold text-white">
+            ✅ Generación Completada
+          </h3>
+          <div class="space-y-4">
+            <div class="p-4 bg-gray-700 rounded-lg">
+              <h4 class="mb-2 text-sm font-medium text-yellow-500">
+                Prompt Utilizado:
+              </h4>
+              <p class="text-sm text-gray-300 whitespace-pre-line">
+                {{ generatedPrompt.fullPrompt }}
+              </p>
+            </div>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div class="p-3 bg-gray-700 rounded-lg">
+                <div class="text-xs text-gray-400">Palabras</div>
+                <div class="text-lg font-semibold text-white">
+                  {{ generatedPrompt.metadata.wordCount }}
+                </div>
+              </div>
+              <div class="p-3 bg-gray-700 rounded-lg">
+                <div class="text-xs text-gray-400">Complejidad</div>
+                <div class="text-lg font-semibold text-yellow-500">
+                  {{ generatedPrompt.metadata.complexity }}
+                </div>
+              </div>
+              <div class="p-3 bg-gray-700 rounded-lg">
+                <div class="text-xs text-gray-400">Tokens</div>
+                <div class="text-lg font-semibold text-white">
+                  {{ generatedPrompt.metadata.estimatedTokens }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

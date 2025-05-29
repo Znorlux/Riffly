@@ -6,7 +6,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { TopbarComponent } from '../../components/topbar/topbar.component';
 import {
@@ -20,6 +20,10 @@ import {
   MusicGenerationData,
   GeneratedPrompt,
 } from '../../services/prompt-generator.service';
+import {
+  MusicGenerationService,
+  MusicGenerationResult,
+} from '../../services/music-generation.service';
 
 interface CreationMethod {
   id: string;
@@ -148,7 +152,8 @@ export class CreateComponent implements OnDestroy {
     private fb: FormBuilder,
     private uiService: UiService,
     private musicService: MusicService,
-    private promptGenerator: PromptGeneratorService
+    private promptGenerator: PromptGeneratorService,
+    private musicGenerationService: MusicGenerationService
   ) {
     this.createForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -198,7 +203,7 @@ export class CreateComponent implements OnDestroy {
     if (this.createForm.valid) {
       const formData = this.createForm.value;
 
-      // Preparar datos para el generador de prompts
+      // Preparar datos para el generador de música
       const musicData: MusicGenerationData = {
         method: this.selectedMethod,
         title: formData.title,
@@ -213,97 +218,70 @@ export class CreateComponent implements OnDestroy {
         allowCollaborations: formData.allowCollaborations,
       };
 
-      // Validar datos antes de generar el prompt
-      const validation = this.promptGenerator.validatePromptData(musicData);
-      if (!validation.isValid) {
-        this.uiService.showNotification(
-          `Error en los datos: ${validation.errors.join(', ')}`,
-          'error'
-        );
-        return;
-      }
-
-      // Generar el prompt completo para la IA
-      const generatedPrompt: GeneratedPrompt =
-        this.promptGenerator.generateMusicPrompt(musicData);
-
-      // Console.log con todos los datos del formulario y el prompt generado
-      console.log('=== DATOS DEL FORMULARIO DE CREACIÓN ===');
-      console.log('Método seleccionado:', this.selectedMethod);
-      console.log(
-        'Requiere PRO:',
-        this.selectedMethod === 'style' ? 'SÍ - Imitación de estilo' : 'NO'
-      );
-      console.log('Datos del formulario:', {
-        title: formData.title,
-        description: formData.description,
-        genre: formData.genre,
-        mood: formData.mood,
-        tempo: formData.tempo,
-        duration: formData.duration,
-        durationFormatted: this.formatDuration(formData.duration),
-        instruments: formData.instruments,
-        lyrics: formData.lyrics,
-        isPublic: formData.isPublic,
-        allowCollaborations: formData.allowCollaborations,
-      });
-
-      console.log('\n=== PROMPT GENERADO PARA IA ===');
-      console.log('Prompt completo:');
-      console.log(generatedPrompt.fullPrompt);
-      console.log('\n--- Secciones del prompt ---');
-      console.log('Método:', generatedPrompt.sections.method);
-      console.log('Estilo:', generatedPrompt.sections.style);
-      console.log('Técnico:', generatedPrompt.sections.technical);
-      console.log('Creativo:', generatedPrompt.sections.creative);
-      console.log('Duración:', generatedPrompt.sections.duration);
-      if (generatedPrompt.sections.instruments) {
-        console.log('Instrumentos:', generatedPrompt.sections.instruments);
-      }
-      if (generatedPrompt.sections.lyrics) {
-        console.log('Letras:', generatedPrompt.sections.lyrics);
-      }
-
-      console.log('\n--- Metadatos del prompt ---');
-      console.log('Palabras:', generatedPrompt.metadata.wordCount);
-      console.log('Complejidad:', generatedPrompt.metadata.complexity);
-      console.log(
-        'Tokens estimados:',
-        generatedPrompt.metadata.estimatedTokens
-      );
-
-      console.log('\n--- Prompt simplificado ---');
-      console.log(this.promptGenerator.generateSimplePrompt(musicData));
-      console.log('==========================================');
-
+      // Iniciar el proceso de generación
       this.isGenerating = true;
       this.generationProgress = 0;
 
-      // Simulación del progreso
+      // Simular progreso mientras se procesa
       const progressInterval = setInterval(() => {
-        this.generationProgress += Math.random() * 15;
-        if (this.generationProgress >= 100) {
-          this.generationProgress = 100;
-          clearInterval(progressInterval);
+        if (this.generationProgress < 90) {
+          this.generationProgress += Math.random() * 10;
+        }
+      }, 500);
 
-          // Simular finalización después de un momento
-          setTimeout(() => {
+      console.log('=== INICIANDO GENERACIÓN CON BACKEND ===');
+      console.log('Datos del formulario:', musicData);
+
+      // Llamar al servicio de generación real
+      this.musicGenerationService
+        .generateAndSaveMusic(musicData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (result: MusicGenerationResult) => {
+            clearInterval(progressInterval);
+            this.generationProgress = 100;
+
+            // Log detallado del resultado
+            console.log('=== GENERACIÓN COMPLETADA ===');
+            console.log('Resultado completo:', result);
+            console.log('ID de la canción:', result.id);
+            console.log('Prompt utilizado:', result.prompt.fullPrompt);
+            console.log('URLs generadas:');
+            console.log('  - Audio:', result.savedFiles.audio.publicUrl);
+            console.log(
+              '  - Espectrograma:',
+              result.savedFiles.spectrogram.publicUrl
+            );
+            console.log('Tiempo total:', result.metadata.generationTime, 'ms');
+            console.log('Estado:', result.metadata.status);
+
+            // Guardar el resultado para mostrar en la UI
+            this.generatedPrompt = result.prompt;
+
+            // Finalizar proceso
+            setTimeout(() => {
+              this.isGenerating = false;
+              this.generationProgress = 0;
+
+              // Mostrar notificación de éxito con opción de reproducir
+              this.uiService.showNotification(
+                `¡"${musicData.title}" creada exitosamente! La música se ha guardado en tu biblioteca.`,
+                'success'
+              );
+            }, 1000);
+          },
+          error: (error) => {
+            clearInterval(progressInterval);
+            console.error('Error en la generación completa:', error);
+
             this.isGenerating = false;
             this.generationProgress = 0;
-            this.generatedPrompt = generatedPrompt;
-            this.uiService.showNotification(
-              'Canción generada exitosamente',
-              'success'
-            );
-          }, 1000);
-        }
-      }, 200);
 
-      // TODO: Implementar método generateSong en MusicService
-      // this.musicService.generateSong({
-      //   method: this.selectedMethod,
-      //   ...formData
-      // });
+            // El servicio ya maneja las notificaciones de error
+            // pero podemos agregar logging adicional aquí
+            console.log('Proceso de generación detenido debido a error');
+          },
+        });
     } else {
       this.uiService.showNotification(
         'Por favor completa todos los campos requeridos',
