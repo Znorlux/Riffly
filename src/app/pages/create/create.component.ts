@@ -15,6 +15,11 @@ import {
 } from '../../shared/components/icon/icon.component';
 import { UiService } from '../../services/ui.service';
 import { MusicService } from '../../services/music.service';
+import {
+  PromptGeneratorService,
+  MusicGenerationData,
+  GeneratedPrompt,
+} from '../../services/prompt-generator.service';
 
 interface CreationMethod {
   id: string;
@@ -57,6 +62,7 @@ export class CreateComponent implements OnDestroy {
   selectedMethod = 'prompt';
   isGenerating = false;
   generationProgress = 0;
+  generatedPrompt: GeneratedPrompt | null = null;
 
   creationMethods: CreationMethod[] = [
     {
@@ -141,7 +147,8 @@ export class CreateComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private uiService: UiService,
-    private musicService: MusicService
+    private musicService: MusicService,
+    private promptGenerator: PromptGeneratorService
   ) {
     this.createForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -189,8 +196,38 @@ export class CreateComponent implements OnDestroy {
 
   onGenerate(): void {
     if (this.createForm.valid) {
-      // Console.log con todos los datos del formulario
       const formData = this.createForm.value;
+
+      // Preparar datos para el generador de prompts
+      const musicData: MusicGenerationData = {
+        method: this.selectedMethod,
+        title: formData.title,
+        description: formData.description,
+        genre: formData.genre,
+        mood: formData.mood,
+        tempo: formData.tempo,
+        duration: formData.duration,
+        instruments: formData.instruments || [],
+        lyrics: formData.lyrics || '',
+        isPublic: formData.isPublic,
+        allowCollaborations: formData.allowCollaborations,
+      };
+
+      // Validar datos antes de generar el prompt
+      const validation = this.promptGenerator.validatePromptData(musicData);
+      if (!validation.isValid) {
+        this.uiService.showNotification(
+          `Error en los datos: ${validation.errors.join(', ')}`,
+          'error'
+        );
+        return;
+      }
+
+      // Generar el prompt completo para la IA
+      const generatedPrompt: GeneratedPrompt =
+        this.promptGenerator.generateMusicPrompt(musicData);
+
+      // Console.log con todos los datos del formulario y el prompt generado
       console.log('=== DATOS DEL FORMULARIO DE CREACIÓN ===');
       console.log('Método seleccionado:', this.selectedMethod);
       console.log(
@@ -209,12 +246,34 @@ export class CreateComponent implements OnDestroy {
         lyrics: formData.lyrics,
         isPublic: formData.isPublic,
         allowCollaborations: formData.allowCollaborations,
-        //proFeatures: {
-        //  privateSongs: 'Requiere suscripción PRO',
-        //  collaborations: 'Requiere suscripción PRO',
-        //},
       });
-      console.log('Formulario completo:', formData);
+
+      console.log('\n=== PROMPT GENERADO PARA IA ===');
+      console.log('Prompt completo:');
+      console.log(generatedPrompt.fullPrompt);
+      console.log('\n--- Secciones del prompt ---');
+      console.log('Método:', generatedPrompt.sections.method);
+      console.log('Estilo:', generatedPrompt.sections.style);
+      console.log('Técnico:', generatedPrompt.sections.technical);
+      console.log('Creativo:', generatedPrompt.sections.creative);
+      console.log('Duración:', generatedPrompt.sections.duration);
+      if (generatedPrompt.sections.instruments) {
+        console.log('Instrumentos:', generatedPrompt.sections.instruments);
+      }
+      if (generatedPrompt.sections.lyrics) {
+        console.log('Letras:', generatedPrompt.sections.lyrics);
+      }
+
+      console.log('\n--- Metadatos del prompt ---');
+      console.log('Palabras:', generatedPrompt.metadata.wordCount);
+      console.log('Complejidad:', generatedPrompt.metadata.complexity);
+      console.log(
+        'Tokens estimados:',
+        generatedPrompt.metadata.estimatedTokens
+      );
+
+      console.log('\n--- Prompt simplificado ---');
+      console.log(this.promptGenerator.generateSimplePrompt(musicData));
       console.log('==========================================');
 
       this.isGenerating = true;
@@ -231,6 +290,7 @@ export class CreateComponent implements OnDestroy {
           setTimeout(() => {
             this.isGenerating = false;
             this.generationProgress = 0;
+            this.generatedPrompt = generatedPrompt;
             this.uiService.showNotification(
               'Canción generada exitosamente',
               'success'
