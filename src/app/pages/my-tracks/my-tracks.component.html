@@ -1,0 +1,328 @@
+<div class="flex h-screen bg-gray-900">
+  <!-- Sidebar component -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main content area -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Top navigation -->
+    <app-topbar></app-topbar>
+
+    <!-- Main my-tracks content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <!-- Header Section -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 class="mb-2 text-4xl font-bold text-white">
+              <i class="mr-3 text-yellow-500 fas fa-music"></i>
+              Mis Canciones
+            </h1>
+            <p class="text-lg text-gray-400">
+              Gestiona y reproduce tu biblioteca musical generada con IA
+            </p>
+          </div>
+          <div class="hidden lg:block">
+            <div
+              class="px-4 py-2 text-sm text-white/80 bg-[#1f2937] rounded-lg"
+            >
+              <span class="font-medium">🎵 Mi Biblioteca</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls and Filters Section -->
+      <section class="p-6 mb-8 bg-gray-800 rounded-xl">
+        <h2 class="mb-6 text-2xl font-semibold text-white">
+          Búsqueda y Filtros
+        </h2>
+
+        <!-- Search Bar -->
+        <div class="relative mb-6">
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          >
+            <i class="text-gray-400 fas fa-search"></i>
+          </div>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
+            placeholder="Buscar por título, descripción o prompt..."
+            class="w-full py-3 pl-10 pr-4 text-white placeholder-gray-400 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+          />
+          <button
+            *ngIf="searchQuery"
+            (click)="searchQuery = ''; onSearch()"
+            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <label
+              for="genre-filter"
+              class="block mb-2 text-sm font-medium text-gray-300"
+            >
+              Género Musical
+            </label>
+            <select
+              id="genre-filter"
+              [(ngModel)]="selectedGenre"
+              (change)="onGenreChange()"
+              class="w-full px-4 py-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+            >
+              <option value="">Todos los géneros</option>
+              <option *ngFor="let genre of genres" [value]="genre">
+                {{ getGenreDisplayName(genre) }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              for="mood-filter"
+              class="block mb-2 text-sm font-medium text-gray-300"
+            >
+              Estado de Ánimo
+            </label>
+            <select
+              id="mood-filter"
+              [(ngModel)]="selectedMood"
+              (change)="onMoodChange()"
+              class="w-full px-4 py-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+            >
+              <option value="">Todos los estados</option>
+              <option *ngFor="let mood of moods" [value]="mood">
+                {{ getMoodDisplayName(mood) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="flex items-end">
+            <button
+              (click)="clearFilters()"
+              [disabled]="!searchQuery && !selectedGenre && !selectedMood"
+              class="w-full px-4 py-3 font-medium text-gray-900 transition-colors duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed"
+            >
+              <i class="mr-2 fas fa-filter"></i>
+              Limpiar filtros
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statistics -->
+      <div
+        *ngIf="tracks.length > 0"
+        class="grid grid-cols-2 gap-4 mb-8 md:grid-cols-4"
+      >
+        <div class="p-4 bg-gray-800 rounded-lg">
+          <div class="text-2xl font-bold text-yellow-500">
+            {{ filteredTracks.length }}
+          </div>
+          <div class="text-sm text-gray-400">Mostradas</div>
+        </div>
+        <div class="p-4 bg-gray-800 rounded-lg">
+          <div class="text-2xl font-bold text-white">{{ tracks.length }}</div>
+          <div class="text-sm text-gray-400">Total</div>
+        </div>
+        <div class="p-4 bg-gray-800 rounded-lg">
+          <div class="text-2xl font-bold text-blue-500">
+            {{ getPublicTracksCount() }}
+          </div>
+          <div class="text-sm text-gray-400">Públicas</div>
+        </div>
+        <div class="p-4 bg-gray-800 rounded-lg">
+          <div class="text-2xl font-bold text-green-500">
+            {{ getAiGeneratedTracksCount() }}
+          </div>
+          <div class="text-sm text-gray-400">Con IA</div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div
+        *ngIf="loading"
+        class="flex flex-col items-center justify-center py-16 text-center"
+      >
+        <div
+          class="w-12 h-12 mb-4 border-4 border-gray-600 rounded-full border-t-yellow-500 animate-spin"
+        ></div>
+        <p class="text-lg text-gray-400">Cargando tus canciones...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && tracks.length === 0" class="py-16 text-center">
+        <div class="mx-auto mb-6 text-6xl text-gray-600">
+          <i class="fas fa-music"></i>
+        </div>
+        <h2 class="mb-4 text-2xl font-bold text-white">
+          No tienes canciones aún
+        </h2>
+        <p class="mb-8 text-gray-400">
+          ¡Comienza a crear música increíble con IA!
+        </p>
+        <button
+          routerLink="/create"
+          class="px-6 py-3 font-medium text-gray-900 transition-colors duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600"
+        >
+          <i class="mr-2 fas fa-plus"></i>
+          Crear mi primera canción
+        </button>
+      </div>
+
+      <!-- No Results State -->
+      <div
+        *ngIf="!loading && tracks.length > 0 && filteredTracks.length === 0"
+        class="py-16 text-center"
+      >
+        <div class="mx-auto mb-6 text-6xl text-gray-600">
+          <i class="fas fa-search"></i>
+        </div>
+        <h2 class="mb-4 text-2xl font-bold text-white">
+          No se encontraron canciones
+        </h2>
+        <p class="mb-8 text-gray-400">
+          Intenta cambiar los filtros o términos de búsqueda
+        </p>
+        <button
+          (click)="clearFilters()"
+          class="px-6 py-3 font-medium text-gray-900 transition-colors duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600"
+        >
+          <i class="mr-2 fas fa-filter"></i>
+          Limpiar filtros
+        </button>
+      </div>
+
+      <!-- Tracks Grid -->
+      <div
+        *ngIf="!loading && filteredTracks.length > 0"
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
+        <div
+          *ngFor="let track of filteredTracks"
+          class="overflow-hidden transition-all duration-300 bg-gray-800 rounded-xl hover:bg-gray-750"
+          [class.ring-2]="currentlyPlaying === track.id"
+          [class.ring-yellow-500]="currentlyPlaying === track.id"
+        >
+          <!-- Cover Image -->
+          <div class="relative aspect-square">
+            <img
+              [src]="
+                track.spectrogramUrl ||
+                track.coverImage ||
+                'https://placehold.co/400x400/333/yellow?text=Cover'
+              "
+              [alt]="track.title"
+              class="object-cover w-full h-full"
+            />
+            <div
+              class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 opacity-0 bg-black/40 hover:opacity-100"
+            >
+              <button
+                (click)="playTrack(track)"
+                class="p-4 text-white transition-transform duration-200 bg-yellow-500 rounded-full hover:bg-yellow-600 hover:scale-110"
+              >
+                <i
+                  class="text-xl"
+                  [class.fa-play]="currentlyPlaying !== track.id"
+                  [class.fa-pause]="currentlyPlaying === track.id"
+                ></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Track Content -->
+          <div class="p-6">
+            <h3 class="mb-2 text-xl font-bold text-white truncate">
+              {{ track.title }}
+            </h3>
+
+            <p
+              *ngIf="track.description"
+              class="mb-4 text-sm text-gray-400 line-clamp-2"
+            >
+              {{ track.description }}
+            </p>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span
+                class="px-2 py-1 text-xs font-medium text-blue-900 bg-blue-200 rounded-full"
+              >
+                {{ getGenreDisplayName(track.genre) }}
+              </span>
+              <span
+                class="px-2 py-1 text-xs font-medium text-purple-900 bg-purple-200 rounded-full"
+              >
+                {{ getMoodDisplayName(track.mood) }}
+              </span>
+              <span
+                class="px-2 py-1 text-xs font-medium text-green-900 bg-green-200 rounded-full"
+              >
+                {{ formatDuration(track.duration) }}
+              </span>
+            </div>
+
+            <!-- Metadata -->
+            <div class="mb-4 space-y-2 text-sm text-gray-400">
+              <div class="flex items-center">
+                <i class="mr-2 text-yellow-500 fas fa-calendar"></i>
+                {{ formatDate(track.createdAt) }}
+              </div>
+              <div *ngIf="track.aiGenerated" class="flex items-center">
+                <i class="mr-2 text-yellow-500 fas fa-robot"></i>
+                Generada con IA
+              </div>
+              <div *ngIf="track.isPublic" class="flex items-center">
+                <i class="mr-2 text-yellow-500 fas fa-globe"></i>
+                Pública
+              </div>
+            </div>
+
+            <!-- Instruments -->
+            <div
+              *ngIf="track.instruments && track.instruments.length > 0"
+              class="mb-4"
+            >
+              <div class="mb-2 text-sm font-medium text-gray-300">
+                Instrumentos:
+              </div>
+              <div class="flex flex-wrap gap-1">
+                <span
+                  *ngFor="let instrument of track.instruments"
+                  class="px-2 py-1 text-xs text-orange-900 bg-orange-200 rounded-full"
+                >
+                  {{ instrument }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-2">
+              <button
+                (click)="downloadTrack(track, $event)"
+                class="flex-1 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 bg-gray-700 rounded-lg hover:bg-gray-600"
+                title="Descargar"
+              >
+                <i class="mr-1 fas fa-download"></i>
+                Descargar
+              </button>
+              <button
+                (click)="deleteTrack(track, $event)"
+                class="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 bg-red-600 rounded-lg hover:bg-red-700"
+                title="Eliminar"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -49,6 +49,13 @@ export const SIDEBAR_MENU = {
   ],
   LIBRARY: [
     {
+      id: 'my-tracks',
+      label: 'Mis Canciones',
+      icon: 'music',
+      route: '/my-tracks',
+      active: false,
+    },
+    {
       id: 'songs',
       label: 'Songs',
       icon: 'music',

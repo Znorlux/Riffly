@@ -24,6 +24,7 @@ import {
   MusicGenerationService,
   MusicGenerationResult,
 } from '../../services/music-generation.service';
+import { TracksService } from '../../services/tracks.service';
 
 interface CreationMethod {
   id: string;
@@ -153,7 +154,8 @@ export class CreateComponent implements OnDestroy {
     private uiService: UiService,
     private musicService: MusicService,
     private promptGenerator: PromptGeneratorService,
-    private musicGenerationService: MusicGenerationService
+    private musicGenerationService: MusicGenerationService,
+    private tracksService: TracksService
   ) {
     this.createForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -307,6 +309,11 @@ export class CreateComponent implements OnDestroy {
                 `¡"${musicData.title}" creada exitosamente! ${trackMessage}`,
                 'success'
               );
+
+              // Agregar el track al servicio de tracks
+              if (result.createdTrack && result.createdTrack.id) {
+                this.tracksService.addTrack(result.createdTrack);
+              }
             }, 1000);
           },
           error: (error: unknown) => {
