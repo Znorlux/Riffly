@@ -255,6 +255,38 @@ export class CreateComponent implements OnDestroy {
             console.log('Tiempo total:', result.metadata.generationTime, 'ms');
             console.log('Estado:', result.metadata.status);
 
+            // Información del track creado en DB
+            if (result.createdTrack && result.createdTrack.id) {
+              console.log('=== TRACK GUARDADO EN BASE DE DATOS ===');
+              console.log('ID del track en DB:', result.createdTrack.id);
+              console.log(
+                'Usuario propietario:',
+                result.createdTrack.user.username
+              );
+              console.log(
+                'URL pública del audio:',
+                result.createdTrack.audioUrl
+              );
+              console.log(
+                'URL del espectrograma:',
+                result.createdTrack.spectrogramUrl
+              );
+              console.log('Género:', result.createdTrack.genre);
+              console.log('Estado de ánimo:', result.createdTrack.mood);
+              console.log('Tempo:', result.createdTrack.tempo);
+              console.log(
+                'Duración:',
+                result.createdTrack.duration,
+                'segundos'
+              );
+              console.log('Instrumentos:', result.createdTrack.instruments);
+              console.log('Generado por IA:', result.createdTrack.aiGenerated);
+              console.log(
+                'Método de generación:',
+                result.createdTrack.generationMethod
+              );
+            }
+
             // Guardar el resultado para mostrar en la UI
             this.generatedPrompt = result.prompt;
 
@@ -263,23 +295,30 @@ export class CreateComponent implements OnDestroy {
               this.isGenerating = false;
               this.generationProgress = 0;
 
-              // Mostrar notificación de éxito con opción de reproducir
+              // Mostrar notificación de éxito con información del track
+              const trackMessage = result.createdTrack?.id
+                ? `La canción se ha guardado en tu biblioteca (ID: ${result.createdTrack.id.substring(
+                    0,
+                    8
+                  )}...)`
+                : 'La música se generó exitosamente';
+
               this.uiService.showNotification(
-                `¡"${musicData.title}" creada exitosamente! La música se ha guardado en tu biblioteca.`,
+                `¡"${musicData.title}" creada exitosamente! ${trackMessage}`,
                 'success'
               );
             }, 1000);
           },
-          error: (error) => {
+          error: (error: unknown) => {
             clearInterval(progressInterval);
-            console.error('Error en la generación completa:', error);
-
             this.isGenerating = false;
             this.generationProgress = 0;
 
-            // El servicio ya maneja las notificaciones de error
-            // pero podemos agregar logging adicional aquí
-            console.log('Proceso de generación detenido debido a error');
+            console.error('Error en la generación:', error);
+            this.uiService.showNotification(
+              'Error al generar la música. Por favor intenta de nuevo.',
+              'error'
+            );
           },
         });
     } else {
