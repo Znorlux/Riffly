@@ -6,6 +6,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FollowingComponent } from './pages/following/following.component';
 import { CreateComponent } from './pages/create/create.component';
 import { MyTracksComponent } from './pages/my-tracks/my-tracks.component';
+import { YouTubeDownloadComponent } from './pages/youtube-download/youtube-download.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guest.guard';
 
@@ -39,6 +40,11 @@ export const routes: Routes = [
   {
     path: 'my-tracks',
     component: MyTracksComponent,
+    canActivate: [AuthGuard], // Solo usuarios autenticados
+  },
+  {
+    path: 'youtube-download',
+    component: YouTubeDownloadComponent,
     canActivate: [AuthGuard], // Solo usuarios autenticados
   },
   { path: '**', redirectTo: '' }, // todo lo demás va a home

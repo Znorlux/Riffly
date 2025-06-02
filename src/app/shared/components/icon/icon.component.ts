@@ -28,7 +28,9 @@ export type IconName =
   | 'microphone'
   | 'upload'
   | 'check'
-  | 'help-circle';
+  | 'help-circle'
+  | 'download'
+  | 'youtube';
 
 @Component({
   selector: 'app-icon',
@@ -272,6 +274,21 @@ export type IconName =
           ></path>
           <circle cx="10" cy="14" r="0.5" fill="currentColor"></circle>
         </g>
+
+        <!-- Download -->
+        <path
+          *ngSwitchCase="'download'"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 15v-3m0 0l-2-2m2 2l2-2M3 7h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
+        ></path>
+
+        <!-- YouTube -->
+        <path
+          *ngSwitchCase="'youtube'"
+          d="M 18 5.8 C 17.8 4.92 17.04 4.28 16.16 4.08 C 14.84 3.8 12.4 3.6 9.76 3.6 C 7.12 3.6 4.64 3.8 3.32 4.08 C 2.44 4.28 1.68 4.88 1.52 5.8 C 1.36 6.8 1.2 8.2 1.2 10 C 1.2 11.8 1.36 13.2 1.56 14.2 C 1.72 15.08 2.48 15.72 3.36 15.92 C 4.76 16.2 7.16 16.4 9.8 16.4 C 12.44 16.4 14.84 16.2 16.24 15.92 C 17.12 15.72 17.88 15.12 18.04 14.2 C 18.2 13.2 18.4 11.76 18.44 10 C 18.36 8.2 18.16 6.8 18 5.8 Z M 7.6 12.8 L 7.6 7.2 L 12.48 10 Z"
+        ></path>
       </ng-container>
     </svg>
   `,

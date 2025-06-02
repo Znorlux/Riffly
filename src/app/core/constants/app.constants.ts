@@ -46,6 +46,13 @@ export const SIDEBAR_MENU = {
       route: '/personalize',
       active: false,
     },
+    {
+      id: 'youtube-download',
+      label: 'Descarga de YouTube',
+      icon: 'youtube',
+      route: '/youtube-download',
+      active: false,
+    },
   ],
   LIBRARY: [
     {

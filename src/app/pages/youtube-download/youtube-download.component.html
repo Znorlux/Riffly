@@ -1,0 +1,263 @@
+<div class="flex h-screen bg-gray-900">
+  <!-- Sidebar component -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main content area -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Top navigation -->
+    <app-topbar></app-topbar>
+
+    <!-- Main youtube-download content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <!-- Header Section -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 class="mb-2 text-4xl font-bold text-white">
+              Descargador de YouTube
+            </h1>
+            <p class="text-lg text-gray-400">
+              Descarga canciones de YouTube para usarlas como referencia
+            </p>
+          </div>
+          <div class="hidden lg:block">
+            <div
+              class="px-4 py-2 text-sm text-white/80 bg-[#1f2937] rounded-lg"
+            >
+              <span class="font-medium">🎵 Audio de YouTube</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download Section -->
+      <section class="p-6 mb-8 bg-gray-800 rounded-xl">
+        <h2 class="mb-6 text-2xl font-semibold text-white">
+          Descargar desde YouTube
+        </h2>
+
+        <!-- URL Input -->
+        <div class="mb-6">
+          <label
+            for="youtube-url"
+            class="block mb-2 text-sm font-medium text-gray-300"
+          >
+            URL de YouTube *
+          </label>
+          <div class="relative">
+            <input
+              id="youtube-url"
+              [(ngModel)]="youtubeUrl"
+              type="url"
+              placeholder="https://www.youtube.com/watch?v=..."
+              [disabled]="isDownloading"
+              class="w-full px-4 py-3 pr-12 text-white placeholder-gray-400 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 disabled:opacity-50"
+              [class.border-gray-600]="!youtubeUrl || isValidUrl"
+              [class.border-red-500]="youtubeUrl && !isValidUrl"
+              [class.border-green-500]="youtubeUrl && isValidUrl"
+            />
+            <!-- Validation Icon -->
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <app-icon
+                *ngIf="youtubeUrl && isValidUrl"
+                name="check"
+                size="5"
+                customClass="text-green-500"
+              ></app-icon>
+              <svg
+                *ngIf="youtubeUrl && !isValidUrl"
+                class="w-5 h-5 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div
+            class="mt-1 text-sm"
+            [class]="
+              youtubeUrl && !isValidUrl ? 'text-red-400' : 'text-gray-400'
+            "
+          >
+            {{
+              youtubeUrl && !isValidUrl
+                ? "URL de YouTube no válida"
+                : "Pega aquí la URL del video de YouTube que quieres descargar"
+            }}
+          </div>
+        </div>
+
+        <!-- Download Button -->
+        <div class="flex justify-center">
+          <button
+            (click)="downloadSong()"
+            [disabled]="!isValidUrl || isDownloading"
+            [class.opacity-50]="!isValidUrl || isDownloading"
+            [class.cursor-not-allowed]="!isValidUrl || isDownloading"
+            class="px-8 py-3 font-medium text-gray-900 transition-all duration-200 rounded-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-300"
+          >
+            <span *ngIf="!isDownloading" class="flex items-center space-x-2">
+              <app-icon name="upload" size="5"></app-icon>
+              <span>Descargar de YouTube</span>
+            </span>
+            <span *ngIf="isDownloading" class="flex items-center space-x-2">
+              <div
+                class="w-5 h-5 border-2 border-gray-900 rounded-full border-t-transparent animate-spin"
+              ></div>
+              <span>Descargando...</span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Download Progress -->
+      <div *ngIf="isDownloading" class="p-6 mb-8 bg-gray-800 rounded-xl">
+        <div class="text-center">
+          <h3 class="mb-4 text-xl font-semibold text-white">
+            Descargando desde YouTube...
+          </h3>
+          <div class="w-full h-3 mb-4 bg-gray-700 rounded-full">
+            <div
+              class="h-3 transition-all duration-300 rounded-full bg-gradient-to-r from-red-500 to-red-600"
+              [style.width.%]="downloadProgress"
+            ></div>
+          </div>
+          <p class="text-sm text-gray-400">
+            {{ downloadProgress.toFixed(0) }}% completado
+          </p>
+          <div class="mt-4 text-xs text-gray-500">
+            <div *ngIf="downloadProgress < 30">
+              🎵 Obteniendo información del video...
+            </div>
+            <div *ngIf="downloadProgress >= 30 && downloadProgress < 60">
+              🎬 Descargando audio de YouTube...
+            </div>
+            <div *ngIf="downloadProgress >= 60 && downloadProgress < 90">
+              ☁️ Subiendo a Supabase...
+            </div>
+            <div *ngIf="downloadProgress >= 90">✅ Finalizando descarga...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download Result -->
+      <div
+        *ngIf="downloadedSong && !isDownloading"
+        class="p-6 mb-8 bg-gray-800 rounded-xl"
+      >
+        <h3 class="mb-4 text-xl font-semibold text-white">
+          ✅ Descarga Completada
+        </h3>
+        <div class="flex items-start gap-4">
+          <!-- Thumbnail -->
+          <div class="flex-shrink-0">
+            <img
+              [src]="getThumbnailUrl(youtubeUrl)"
+              [alt]="downloadedSong.title"
+              class="object-cover w-20 h-20 rounded-lg"
+              (error)="onImageError($event)"
+            />
+          </div>
+
+          <!-- Song Info -->
+          <div class="flex-1">
+            <h4 class="mb-2 text-lg font-medium text-white">
+              {{ downloadedSong.title }}
+            </h4>
+            <p class="mb-3 text-sm text-gray-400">
+              Duración: {{ downloadedSong.duration }}
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3">
+              <button
+                (click)="
+                  downloadFile(downloadedSong!.audioUrl, downloadedSong!.title)
+                "
+                class="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
+              >
+                <app-icon name="upload" size="4"></app-icon>
+                Descargar MP3
+              </button>
+              <button
+                (click)="copyToClipboard(downloadedSong!.audioUrl)"
+                class="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
+              >
+                <app-icon name="chat" size="4"></app-icon>
+                Copiar URL
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download History -->
+      <section class="p-6 bg-gray-800 rounded-xl">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-semibold text-white">
+            Historial de Descargas
+          </h2>
+          <button
+            *ngIf="downloadHistory.length > 0"
+            (click)="clearHistory()"
+            class="px-3 py-1 text-sm text-red-400 transition-colors border border-red-400 rounded hover:bg-red-400 hover:text-white"
+          >
+            Limpiar Historial
+          </button>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="downloadHistory.length === 0" class="py-16 text-center">
+          <div class="mx-auto mb-6 text-6xl text-gray-600">🎵</div>
+          <h3 class="mb-4 text-xl font-bold text-white">
+            No hay descargas aún
+          </h3>
+          <p class="text-gray-400">
+            Las canciones que descargues aparecerán aquí
+          </p>
+        </div>
+
+        <!-- History List -->
+        <div *ngIf="downloadHistory.length > 0" class="space-y-4">
+          <div
+            *ngFor="let song of downloadHistory; trackBy: trackBySong"
+            class="flex items-center gap-4 p-4 transition-colors bg-gray-700 rounded-lg hover:bg-gray-600"
+          >
+            <!-- Song Info -->
+            <div class="flex-1">
+              <h4 class="mb-1 font-medium text-white line-clamp-1">
+                {{ song.title }}
+              </h4>
+              <p class="text-sm text-gray-400">{{ song.duration }}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-2">
+              <button
+                (click)="downloadFile(song.audioUrl, song.title)"
+                class="p-2 text-green-400 transition-colors rounded hover:bg-gray-800"
+                [title]="'Descargar ' + song.title"
+              >
+                <app-icon name="upload" size="4"></app-icon>
+              </button>
+              <button
+                (click)="copyToClipboard(song.audioUrl)"
+                class="p-2 text-blue-400 transition-colors rounded hover:bg-gray-800"
+                [title]="'Copiar URL de ' + song.title"
+              >
+                <app-icon name="chat" size="4"></app-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
