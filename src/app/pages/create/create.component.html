@@ -437,10 +437,75 @@
               musical
             </p>
 
-            <!-- Estado del archivo subido -->
+            <!-- Información sobre descargador de YouTube -->
+            <div
+              class="p-3 mb-4 border rounded-lg bg-blue-900/20 border-blue-500/30"
+            >
+              <div class="flex items-start">
+                <app-icon
+                  name="youtube"
+                  size="5"
+                  customClass="text-red-500 mr-2 mt-0.5 flex-shrink-0"
+                ></app-icon>
+                <div>
+                  <p class="mb-1 text-sm font-medium text-blue-300">
+                    💡 ¿Sabías que puedes usar YouTube?
+                  </p>
+                  <p class="text-xs text-blue-200">
+                    Si quieres usar una canción de YouTube como referencia,
+                    <a
+                      href="/youtube-download"
+                      class="text-yellow-400 underline cursor-pointer hover:text-yellow-300"
+                    >
+                      ve al descargador de YouTube
+                    </a>
+                    primero, descarga la canción, y luego pega el link aquí
+                    directamente.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selector de tipo de entrada -->
+            <div class="mb-4">
+              <div class="flex p-1 space-x-2 bg-gray-700 rounded-lg">
+                <button
+                  type="button"
+                  (click)="setReferenceInputType('file')"
+                  [class.bg-yellow-500]="referenceInputType === 'file'"
+                  [class.text-gray-900]="referenceInputType === 'file'"
+                  [class.text-gray-300]="referenceInputType !== 'file'"
+                  class="flex-1 px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-md"
+                >
+                  <app-icon
+                    name="upload"
+                    size="4"
+                    customClass="inline mr-1"
+                  ></app-icon>
+                  Subir archivo
+                </button>
+                <button
+                  type="button"
+                  (click)="setReferenceInputType('url')"
+                  [class.bg-yellow-500]="referenceInputType === 'url'"
+                  [class.text-gray-900]="referenceInputType === 'url'"
+                  [class.text-gray-300]="referenceInputType !== 'url'"
+                  class="flex-1 px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-md"
+                >
+                  <app-icon
+                    name="download"
+                    size="4"
+                    customClass="inline mr-1"
+                  ></app-icon>
+                  Usar link
+                </button>
+              </div>
+            </div>
+
+            <!-- Estado del archivo/URL -->
             <div
               *ngIf="referenceFileUrl && !isUploadingFile"
-              class="mb-3 p-3 bg-green-900/20 border border-green-500/30 rounded-lg"
+              class="p-3 mb-3 border rounded-lg bg-green-900/20 border-green-500/30"
             >
               <div class="flex items-center">
                 <svg
@@ -453,26 +518,34 @@
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="text-green-500 mr-2"
+                  class="mr-2 text-green-500"
                 >
                   <path d="M20 6 9 17l-5-5" />
                 </svg>
-                <span class="text-green-400 text-sm font-medium">
-                  Archivo de referencia cargado exitosamente
+                <span class="text-sm font-medium text-green-400">
+                  Referencia establecida correctamente
                 </span>
               </div>
-              <p class="text-green-300 text-xs mt-1">
-                {{ selectedReferenceFile?.name }} - Listo para generar música
+              <p class="mt-1 text-xs text-green-300">
+                <span *ngIf="referenceInputType === 'file'">
+                  {{ selectedReferenceFile?.name }} - Listo para generar música
+                </span>
+                <span *ngIf="referenceInputType === 'url'">
+                  Link: {{ referenceUrlInput }} - Listo para generar música
+                </span>
               </p>
             </div>
 
-            <!-- Zona de subida -->
-            <div class="flex items-center justify-center w-full">
+            <!-- Upload de archivo -->
+            <div
+              *ngIf="referenceInputType === 'file'"
+              class="flex items-center justify-center w-full"
+            >
               <label
                 for="reference-file"
                 [class.pointer-events-none]="isUploadingFile"
                 [class.opacity-50]="isUploadingFile"
-                class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-700 hover:bg-gray-600 hover:border-yellow-500 transition-colors duration-200"
+                class="flex flex-col items-center justify-center w-full h-32 transition-colors duration-200 bg-gray-700 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer hover:bg-gray-600 hover:border-yellow-500"
               >
                 <div
                   class="flex flex-col items-center justify-center pt-5 pb-6"
@@ -517,6 +590,35 @@
                   class="hidden"
                 />
               </label>
+            </div>
+
+            <!-- Input de URL -->
+            <div *ngIf="referenceInputType === 'url'" class="space-y-3">
+              <div>
+                <label
+                  for="reference-url"
+                  class="block mb-2 text-sm font-medium text-gray-300"
+                >
+                  URL del archivo de audio
+                </label>
+                <input
+                  id="reference-url"
+                  type="url"
+                  [(ngModel)]="referenceUrlInput"
+                  (input)="onUrlInputChange($event)"
+                  placeholder="https://ejemplo.com/cancion.mp3 o link del descargador de YouTube"
+                  class="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                />
+              </div>
+
+              <div class="space-y-1 text-xs text-gray-400">
+                <p>
+                  • Puedes usar links directos a archivos MP3, WAV (Son los
+                  unicos formatos soportados, MAX 10MB).
+                </p>
+                <p>• También funciona con links del descargador de YouTube</p>
+                <p>• Asegúrate de que el link sea público y accesible</p>
+              </div>
             </div>
           </div>
 
@@ -774,7 +876,7 @@
     <!-- Contenido del modal -->
     <div class="p-6 space-y-6">
       <!-- Introducción -->
-      <div class="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+      <div class="p-4 border rounded-lg bg-yellow-500/10 border-yellow-500/20">
         <h3 class="mb-2 text-lg font-semibold text-yellow-400">
           ¿Qué son las etiquetas de estructura?
         </h3>
@@ -796,7 +898,7 @@
           >
             <div class="flex-shrink-0">
               <span
-                class="px-3 py-1 text-sm font-mono text-yellow-400 bg-gray-900 rounded"
+                class="px-3 py-1 font-mono text-sm text-yellow-400 bg-gray-900 rounded"
               >
                 {{ item.tag }}
               </span>

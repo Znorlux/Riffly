@@ -6,6 +6,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -73,6 +74,7 @@ interface FormData {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     SidebarComponent,
     TopbarComponent,
     IconComponent,
@@ -98,6 +100,11 @@ export class CreateComponent implements OnDestroy {
 
   // Para el modal de ayuda de estructura de letras
   showLyricsHelpModal = false;
+
+  // Opciones para método de referencia (archivo vs link)
+  referenceInputType: 'file' | 'url' = 'file';
+  referenceUrlInput = '';
+  isValidatingUrl = false;
 
   // Botones de estructura de letras
   lyricsStructureTags = [
@@ -441,6 +448,86 @@ export class CreateComponent implements OnDestroy {
   onModalBackdropClick(event: Event): void {
     if (event.target === event.currentTarget) {
       this.closeLyricsHelpModal();
+    }
+  }
+
+  /**
+   * Cambia el tipo de entrada de referencia entre archivo y URL
+   */
+  setReferenceInputType(type: 'file' | 'url'): void {
+    this.referenceInputType = type;
+
+    // Limpiar datos del tipo anterior
+    if (type === 'url') {
+      this.selectedReferenceFile = null;
+      this.isUploadingFile = false;
+    } else {
+      this.referenceUrlInput = '';
+      this.isValidatingUrl = false;
+    }
+
+    // Si cambiamos a archivo, también limpiar la URL de referencia
+    if (type === 'file') {
+      this.referenceFileUrl = null;
+    }
+  }
+
+  /**
+   * Valida y procesa la URL ingresada directamente
+   */
+  onUrlInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.referenceUrlInput = input.value.trim();
+
+    if (this.referenceUrlInput) {
+      this.validateAndSetReferenceUrl(this.referenceUrlInput);
+    } else {
+      this.referenceFileUrl = null;
+    }
+  }
+
+  /**
+   * Valida la URL y la establece como referencia
+   */
+  private validateAndSetReferenceUrl(url: string): void {
+    // Validación básica de URL
+    try {
+      const urlObj = new URL(url);
+
+      // Verificar que sea HTTP/HTTPS
+      if (!['http:', 'https:'].includes(urlObj.protocol)) {
+        throw new Error('La URL debe usar protocolo HTTP o HTTPS');
+      }
+
+      // Verificar que parezca un archivo de audio
+      const pathname = urlObj.pathname.toLowerCase();
+      const hasAudioExtension = ['.mp3', '.wav', '.m4a', '.aac'].some((ext) =>
+        pathname.includes(ext)
+      );
+
+      if (
+        !hasAudioExtension &&
+        !url.includes('youtube') &&
+        !url.includes('youtu.be')
+      ) {
+        console.warn(
+          'La URL no parece ser un archivo de audio, pero se permitirá'
+        );
+      }
+
+      // URL válida - establecerla como referencia
+      this.referenceFileUrl = url;
+
+      this.uiService.showNotification(
+        'URL de referencia establecida correctamente',
+        'success'
+      );
+    } catch {
+      this.referenceFileUrl = null;
+      this.uiService.showNotification(
+        'URL inválida. Por favor ingresa una URL válida',
+        'error'
+      );
     }
   }
 
