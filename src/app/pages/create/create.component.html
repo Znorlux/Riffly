@@ -152,6 +152,35 @@
                   >Letra de la canción *</span
                 >
               </label>
+
+              <!-- Botones de estructura de letras (solo para método style) -->
+              <div *ngIf="selectedMethod === 'style'" class="mb-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-gray-400"
+                    >Estructura de la canción:</span
+                  >
+                  <button
+                    type="button"
+                    (click)="openLyricsHelpModal()"
+                    class="flex items-center gap-1 px-2 py-1 text-xs text-yellow-400 transition-colors bg-gray-700 rounded hover:bg-gray-600"
+                  >
+                    <app-icon name="help-circle" size="3"></app-icon>
+                    Ayuda
+                  </button>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    *ngFor="let item of lyricsStructureTags"
+                    type="button"
+                    (click)="insertLyricsTag(item.tag)"
+                    class="px-3 py-1 text-sm font-medium text-white transition-all duration-200 bg-gray-600 rounded-lg hover:bg-yellow-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    [title]="item.description"
+                  >
+                    {{ item.label }}
+                  </button>
+                </div>
+              </div>
+
               <textarea
                 id="song-description"
                 formControlName="description"
@@ -677,5 +706,194 @@
         </div>
       </form>
     </main>
+  </div>
+</div>
+
+<!-- Modal de ayuda para estructura de letras -->
+<div
+  *ngIf="showLyricsHelpModal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75"
+  (click)="onModalBackdropClick($event)"
+  (keydown.escape)="closeLyricsHelpModal()"
+  tabindex="0"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <div
+    class="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-gray-800 rounded-xl shadow-2xl"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+    tabindex="-1"
+  >
+    <!-- Header del modal -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-700">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex items-center justify-center w-10 h-10 bg-yellow-500 rounded-lg"
+        >
+          <app-icon
+            name="help-circle"
+            size="5"
+            customClass="text-gray-900"
+          ></app-icon>
+        </div>
+        <div>
+          <h2 id="modal-title" class="text-xl font-bold text-white">
+            Estructura de Letras de Canciones
+          </h2>
+          <p class="text-sm text-gray-400">
+            Cómo organizar las letras de tu canción
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        (click)="closeLyricsHelpModal()"
+        (keydown.enter)="closeLyricsHelpModal()"
+        (keydown.space)="closeLyricsHelpModal()"
+        class="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700"
+        aria-label="Cerrar modal de ayuda"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="p-6 space-y-6">
+      <!-- Introducción -->
+      <div class="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+        <h3 class="mb-2 text-lg font-semibold text-yellow-400">
+          ¿Qué son las etiquetas de estructura?
+        </h3>
+        <p class="text-gray-300">
+          Las etiquetas de estructura te permiten organizar las diferentes
+          partes de tu canción. Esto ayuda a la IA a entender mejor cómo debe
+          distribuir y componer la música.
+        </p>
+      </div>
+
+      <!-- Lista de etiquetas -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-white">Etiquetas disponibles:</h3>
+
+        <div class="grid gap-3">
+          <div
+            *ngFor="let item of lyricsStructureTags"
+            class="flex items-start gap-4 p-4 bg-gray-700 rounded-lg"
+          >
+            <div class="flex-shrink-0">
+              <span
+                class="px-3 py-1 text-sm font-mono text-yellow-400 bg-gray-900 rounded"
+              >
+                {{ item.tag }}
+              </span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-white">{{ item.label }}</h4>
+              <p class="text-sm text-gray-400">{{ item.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ejemplo de uso -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-white">Ejemplo de uso:</h3>
+        <div class="p-4 bg-gray-900 rounded-lg">
+          <pre
+            class="text-sm text-gray-300 whitespace-pre-wrap"
+          ><span class="text-yellow-400">[intro]</span>
+La música empieza suave
+Con un susurro de esperanza
+
+<span class="text-yellow-400">[verse]</span>
+Camino por la ciudad vacía
+Recordando nuestros momentos
+Las luces brillan como estrellas
+En esta noche de recuerdos
+
+<span class="text-yellow-400">[chorus]</span>
+Y volaré, volaré
+Hacia donde tú estés
+Mi corazón te buscará
+Hasta el amanecer
+
+<span class="text-yellow-400">[verse]</span>
+Las calles hablan en silencio
+De todo lo que pudo ser
+Pero sigo caminando
+Con la fe de volver a ver
+
+<span class="text-yellow-400">[chorus]</span>
+Y volaré, volaré
+Hacia donde tú estés
+Mi corazón te buscará
+Hasta el amanecer
+
+<span class="text-yellow-400">[outro]</span>
+La música se desvanece
+Como un eco en el tiempo</pre>
+        </div>
+      </div>
+
+      <!-- Consejos -->
+      <div class="space-y-3">
+        <h3 class="text-lg font-semibold text-white">Consejos importantes:</h3>
+        <div class="space-y-2">
+          <div class="flex items-start gap-3">
+            <div
+              class="flex-shrink-0 w-2 h-2 mt-2 bg-yellow-500 rounded-full"
+            ></div>
+            <p class="text-sm text-gray-300">
+              <strong class="text-white">Usa saltos de línea:</strong> Separa
+              cada sección con una línea en blanco para mejor organización.
+            </p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div
+              class="flex-shrink-0 w-2 h-2 mt-2 bg-yellow-500 rounded-full"
+            ></div>
+            <p class="text-sm text-gray-300">
+              <strong class="text-white">Sé consistente:</strong> Usa las mismas
+              etiquetas para secciones similares (ej: todos los chorus).
+            </p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div
+              class="flex-shrink-0 w-2 h-2 mt-2 bg-yellow-500 rounded-full"
+            ></div>
+            <p class="text-sm text-gray-300">
+              <strong class="text-white">No es obligatorio:</strong> Puedes
+              escribir letras sin etiquetas, pero la estructura ayuda mucho a la
+              IA.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer del modal -->
+    <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
+      <button
+        type="button"
+        (click)="closeLyricsHelpModal()"
+        class="px-6 py-2 font-medium text-gray-300 transition-colors bg-gray-700 rounded-lg hover:bg-gray-600"
+      >
+        Entendido
+      </button>
+    </div>
   </div>
 </div>

@@ -27,7 +27,8 @@ export type IconName =
   | 'edit'
   | 'microphone'
   | 'upload'
-  | 'check';
+  | 'check'
+  | 'help-circle';
 
 @Component({
   selector: 'app-icon',
@@ -251,6 +252,26 @@ export type IconName =
           stroke-width="2"
           d="M5 13l4 4L19 7"
         ></path>
+
+        <!-- Help Circle -->
+        <g *ngSwitchCase="'help-circle'">
+          <circle
+            cx="10"
+            cy="10"
+            r="8"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          ></circle>
+          <path
+            d="M7.5 10a2.5 2.5 0 015 0"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+          ></path>
+          <circle cx="10" cy="14" r="0.5" fill="currentColor"></circle>
+        </g>
       </ng-container>
     </svg>
   `,

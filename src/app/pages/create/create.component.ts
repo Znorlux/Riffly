@@ -96,6 +96,29 @@ export class CreateComponent implements OnDestroy {
   referenceFileUrl: string | null = null;
   isUploadingFile = false;
 
+  // Para el modal de ayuda de estructura de letras
+  showLyricsHelpModal = false;
+
+  // Botones de estructura de letras
+  lyricsStructureTags = [
+    {
+      tag: '[intro]',
+      label: 'Intro',
+      description: 'Introducción de la canción',
+    },
+    { tag: '[verse]', label: 'Verse', description: 'Estrofa principal' },
+    {
+      tag: '[pre-chorus]',
+      label: 'Pre-Chorus',
+      description: 'Antecoro o pre-estribillo',
+    },
+    { tag: '[chorus]', label: 'Chorus', description: 'Estribillo o coro' },
+    { tag: '[bridge]', label: 'Bridge', description: 'Puente musical' },
+    { tag: '[outro]', label: 'Outro', description: 'Final de la canción' },
+    { tag: '[solo]', label: 'Solo', description: 'Solo instrumental' },
+    { tag: '[refrain]', label: 'Refrain', description: 'Estribillo corto' },
+  ];
+
   creationMethods: CreationMethod[] = [
     {
       id: 'prompt',
@@ -360,6 +383,65 @@ export class CreateComponent implements OnDestroy {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  /**
+   * Inserta una etiqueta de estructura en el textarea de descripción
+   */
+  insertLyricsTag(tag: string): void {
+    const textarea = document.getElementById(
+      'song-description'
+    ) as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentValue = this.createForm.get('description')?.value || '';
+
+    // Insertar la etiqueta en la posición del cursor
+    let newValue = '';
+    if (start === end) {
+      // No hay selección, insertar en la posición del cursor
+      newValue =
+        currentValue.slice(0, start) + tag + '\n' + currentValue.slice(start);
+    } else {
+      // Hay texto seleccionado, reemplazarlo
+      newValue =
+        currentValue.slice(0, start) + tag + '\n' + currentValue.slice(end);
+    }
+
+    // Actualizar el formulario
+    this.createForm.patchValue({ description: newValue });
+
+    // Enfocar el textarea y posicionar el cursor después de la etiqueta
+    setTimeout(() => {
+      textarea.focus();
+      const newPosition = start + tag.length + 1; // +1 por el salto de línea
+      textarea.setSelectionRange(newPosition, newPosition);
+    }, 0);
+  }
+
+  /**
+   * Abre el modal de ayuda para estructura de letras
+   */
+  openLyricsHelpModal(): void {
+    this.showLyricsHelpModal = true;
+  }
+
+  /**
+   * Cierra el modal de ayuda para estructura de letras
+   */
+  closeLyricsHelpModal(): void {
+    this.showLyricsHelpModal = false;
+  }
+
+  /**
+   * Maneja el clic fuera del modal para cerrarlo
+   */
+  onModalBackdropClick(event: Event): void {
+    if (event.target === event.currentTarget) {
+      this.closeLyricsHelpModal();
+    }
   }
 
   private generateWithMiniMax(formData: FormData): void {
