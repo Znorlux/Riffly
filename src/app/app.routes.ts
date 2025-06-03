@@ -7,6 +7,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CreateComponent } from './pages/create/create.component';
 import { YouTubeDownloadComponent } from './pages/youtube-download/youtube-download.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { FollowingComponent } from './pages/following/following.component';
+import { MyTracksComponent } from './pages/my-tracks/my-tracks.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // ruta raíz - acceso público
@@ -43,6 +45,9 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  { path: 'following', component: FollowingComponent },
+  { path: 'my-tracks', component: MyTracksComponent },
+
   { path: 'not-found', component: NotFoundComponent }, // Página 404
   { path: '**', redirectTo: 'not-found' }, // Cualquier ruta no encontrada va a 404
 ];
