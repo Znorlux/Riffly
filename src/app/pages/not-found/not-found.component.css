@@ -1,0 +1,136 @@
+/* Estilos específicos para la página 404 */
+
+/* Animación para el número 404 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.error-number {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Efectos para los botones */
+.action-button {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.action-button:hover::before {
+  left: 100%;
+}
+
+/* Animación de entrada para las tarjetas de ayuda */
+.help-card {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.help-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Efectos de gradiente */
+.gradient-bg {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+/* Animación sutil para el icono musical */
+.music-icon-container {
+  transition: all 0.3s ease;
+}
+
+.music-icon-container:hover {
+  transform: rotate(15deg) scale(1.1);
+  box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+}
+
+/* Efectos de texto */
+.error-title {
+  text-shadow: 0 4px 8px rgba(251, 191, 36, 0.3);
+}
+
+/* Animación de pulso personalizada */
+@keyframes custom-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 40px rgba(251, 191, 36, 0.8);
+  }
+}
+
+.custom-pulse {
+  animation: custom-pulse 2s infinite;
+}
+
+/* Efectos responsive */
+@media (max-width: 640px) {
+  .error-number {
+    font-size: 6rem;
+  }
+
+  .help-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Efectos de focus mejorados */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+}
+
+/* Transiciones suaves para todos los elementos interactivos */
+button,
+a {
+  transition: all 0.2s ease;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .error-number,
+  .music-icon-container,
+  .action-button,
+  .help-card {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Efectos de hover específicos */
+.nav-button:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  transform: scale(1.02);
+}
+
+.secondary-button:hover {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  transform: scale(1.02);
+}
