@@ -65,6 +65,7 @@ export const SIDEBAR_MENU = {
       label: 'Aprendizaje',
       route: '/learning',
       icon: 'help-circle',
+      active: false,
     },
   ],
   LIBRARY: [
