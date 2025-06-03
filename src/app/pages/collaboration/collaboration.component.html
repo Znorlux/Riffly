@@ -1,0 +1,493 @@
+<div class="flex h-screen bg-gray-900">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main content -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Topbar -->
+    <app-topbar></app-topbar>
+
+    <!-- Collaboration workspace -->
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Left panel - Song structure and collaboration -->
+      <div class="flex flex-col w-2/3 border-r border-gray-700">
+        <!-- Header con información de la sesión -->
+        <div class="p-4 bg-gray-800 border-b border-gray-700">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-bold text-white">Sesión Colaborativa</h1>
+              <p class="text-gray-400">
+                "Sueños de Medianoche" •
+                <span class="text-green-400"
+                  >{{ getOnlineUsersCount() }} colaboradores en línea</span
+                >
+              </p>
+            </div>
+
+            <!-- Controles de audio -->
+            <div class="flex items-center space-x-3">
+              <div class="text-sm text-gray-400">
+                {{ formatTime(playbackPosition) }} /
+                {{ formatTime(totalDuration) }}
+              </div>
+
+              <button
+                (click)="togglePlayback()"
+                [class.bg-green-600]="isPlaying"
+                [class.bg-gray-600]="!isPlaying"
+                class="p-3 text-white transition-all rounded-lg hover:opacity-80"
+                [attr.aria-label]="
+                  isPlaying ? 'Pausar reproducción' : 'Reproducir audio'
+                "
+              >
+                <app-icon
+                  [name]="isPlaying ? 'pause' : 'play'"
+                  size="5"
+                ></app-icon>
+              </button>
+
+              <button
+                (click)="toggleRecording()"
+                [class.bg-red-600]="isRecording"
+                [class.bg-gray-600]="!isRecording"
+                [class.animate-pulse]="isRecording"
+                class="p-3 text-white transition-all rounded-lg hover:opacity-80"
+                [attr.aria-label]="
+                  isRecording ? 'Detener grabación' : 'Iniciar grabación'
+                "
+              >
+                <app-icon name="microphone" size="5"></app-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Barra de progreso -->
+          <div class="mt-3">
+            <div class="w-full h-2 bg-gray-700 rounded-full">
+              <div
+                class="h-2 transition-all duration-1000 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600"
+                [style.width.%]="(playbackPosition / totalDuration) * 100"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Parámetros musicales -->
+          <div class="flex items-center mt-3 space-x-6 text-sm">
+            <div class="text-gray-400">
+              <span class="font-medium">Tempo:</span>
+              <span class="text-yellow-500">{{ currentBPM }} BPM</span>
+            </div>
+            <div class="text-gray-400">
+              <span class="font-medium">Tonalidad:</span>
+              <span class="text-yellow-500">{{ currentKey }}</span>
+            </div>
+            <div class="text-gray-400">
+              <span class="font-medium">Género:</span>
+              <span class="text-yellow-500">Pop Colaborativo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Área de trabajo colaborativa -->
+        <div class="flex-1 p-4 space-y-4 overflow-y-auto">
+          <!-- Secciones de la canción -->
+          <div
+            *ngFor="let section of songSections; trackBy: trackBySection"
+            class="transition-all duration-200 bg-gray-800 border-2 rounded-lg"
+            [class.border-yellow-500]="selectedSection === section.id"
+            [class.border-gray-600]="selectedSection !== section.id"
+          >
+            <!-- Header de la sección -->
+            <div
+              class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              (click)="selectSection(section.id)"
+              (keydown.enter)="selectSection(section.id)"
+              (keydown.space)="selectSection(section.id)"
+              tabindex="0"
+              role="button"
+              [attr.aria-expanded]="selectedSection === section.id"
+              [attr.aria-label]="
+                'Expandir sección ' + getSectionTypeLabel(section.type)
+              "
+            >
+              <div class="flex items-center space-x-3">
+                <div
+                  [class]="getUserColor(section.editedBy || '')"
+                  class="w-3 h-3 rounded-full"
+                ></div>
+                <h3 class="font-semibold text-white">
+                  {{ getSectionTypeLabel(section.type) }}
+                </h3>
+                <span class="text-xs text-gray-400">
+                  editado por
+                  <span class="text-yellow-400">
+                    {{ getUserNameByEditedBy(section.editedBy || "") }}
+                  </span>
+                  {{ getTimeAgo(section.lastEdit) }}
+                </span>
+              </div>
+
+              <!-- Indicadores de actividad -->
+              <div class="flex items-center space-x-2">
+                <div
+                  *ngIf="section.suggestions.length > 0"
+                  class="px-2 py-1 text-xs text-blue-300 bg-blue-900 rounded-full"
+                >
+                  {{ section.suggestions.length }} sugerencias
+                </div>
+
+                <div
+                  *ngIf="isUserTypingByEditedBy(section.editedBy || '')"
+                  class="flex items-center space-x-1 text-xs text-yellow-400"
+                >
+                  <div class="flex space-x-1">
+                    <div
+                      class="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                    ></div>
+                    <div
+                      class="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                      style="animation-delay: 0.1s"
+                    ></div>
+                    <div
+                      class="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                      style="animation-delay: 0.2s"
+                    ></div>
+                  </div>
+                  <span>escribiendo...</span>
+                </div>
+
+                <app-icon
+                  name="chevron-right"
+                  size="4"
+                  [class.rotate-90]="selectedSection === section.id"
+                  class="text-gray-400 transition-transform transform"
+                ></app-icon>
+              </div>
+            </div>
+
+            <!-- Contenido de la sección -->
+            <div *ngIf="selectedSection === section.id" class="p-4 space-y-4">
+              <div class="relative">
+                <textarea
+                  [value]="section.content"
+                  readonly
+                  class="w-full h-32 p-3 text-white bg-gray-700 border border-gray-600 rounded-lg resize-none focus:outline-none focus:border-yellow-500"
+                  placeholder="Contenido de la sección..."
+                  [attr.aria-label]="
+                    'Contenido de ' + getSectionTypeLabel(section.type)
+                  "
+                >
+                </textarea>
+
+                <!-- Overlay para simular edición colaborativa -->
+                <div
+                  *ngIf="section.editedBy !== '1'"
+                  class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 rounded-lg"
+                >
+                  <div class="text-center text-gray-300">
+                    <div
+                      class="flex items-center justify-center mb-2 space-x-2"
+                    >
+                      <div
+                        [class]="getUserColor(section.editedBy || '')"
+                        class="w-3 h-3 rounded-full"
+                      ></div>
+                      <span class="font-medium">{{
+                        getUserNameByEditedBy(section.editedBy || "")
+                      }}</span>
+                      <span>está editando</span>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                      Haz clic para sugerir cambios
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sugerencias para esta sección -->
+              <div *ngIf="section.suggestions.length > 0" class="space-y-2">
+                <h4 class="text-sm font-medium text-gray-300">Sugerencias:</h4>
+                <div
+                  *ngFor="let suggestion of section.suggestions"
+                  class="p-3 bg-gray-700 border-l-4 rounded-lg"
+                  [class.border-green-500]="suggestion.approved"
+                  [class.border-blue-500]="!suggestion.approved"
+                >
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center mb-1 space-x-2">
+                        <div
+                          [class]="getUserColor(suggestion.userId)"
+                          class="w-2 h-2 rounded-full"
+                        ></div>
+                        <span class="text-sm font-medium text-white">{{
+                          suggestion.userName
+                        }}</span>
+                        <span class="text-xs text-gray-400">{{
+                          getTimeAgo(suggestion.timestamp)
+                        }}</span>
+                      </div>
+                      <p class="text-sm text-gray-300">
+                        {{ suggestion.suggestion }}
+                      </p>
+                    </div>
+
+                    <button
+                      *ngIf="!suggestion.approved && section.editedBy === '1'"
+                      (click)="approveSuggestion(suggestion.id, section.id)"
+                      class="px-3 py-1 ml-3 text-xs text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      [attr.aria-label]="
+                        'Aprobar sugerencia de ' + suggestion.userName
+                      "
+                    >
+                      Aprobar
+                    </button>
+
+                    <div
+                      *ngIf="suggestion.approved"
+                      class="ml-3 text-green-400"
+                      aria-label="Sugerencia aprobada"
+                    >
+                      <app-icon name="check" size="4"></app-icon>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right panel - Chat and collaborators -->
+      <div class="flex flex-col w-1/3 min-h-0">
+        <!-- Collaborators list -->
+        <div class="flex-shrink-0 p-4 bg-gray-800 border-b border-gray-700">
+          <h3 class="mb-3 text-lg font-semibold text-white">
+            Colaboradores ({{ collaborativeUsers.length }})
+          </h3>
+
+          <div class="space-y-2 overflow-y-auto max-h-40">
+            <div
+              *ngFor="let user of collaborativeUsers"
+              class="flex items-center p-2 space-x-3 bg-gray-700 rounded-lg"
+            >
+              <!-- Avatar (placeholder) -->
+              <div class="relative">
+                <div
+                  [class]="user.color"
+                  class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full"
+                  [attr.aria-label]="'Avatar de ' + user.name"
+                >
+                  {{ user.name.charAt(0) }}
+                </div>
+                <!-- Status indicator -->
+                <div
+                  class="absolute w-3 h-3 border-2 border-gray-700 rounded-full -bottom-1 -right-1"
+                  [class.bg-green-500]="user.status === 'online'"
+                  [class.bg-yellow-500]="user.status === 'away'"
+                  [class.bg-red-500]="user.status === 'busy'"
+                  [attr.aria-label]="'Estado: ' + user.status"
+                ></div>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm font-medium text-white truncate">{{
+                    user.name
+                  }}</span>
+                  <div
+                    *ngIf="user.isTyping"
+                    class="flex space-x-1"
+                    aria-label="Escribiendo"
+                  >
+                    <div
+                      class="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                    ></div>
+                    <div
+                      class="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                      style="animation-delay: 0.1s"
+                    ></div>
+                    <div
+                      class="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                      style="animation-delay: 0.2s"
+                    ></div>
+                  </div>
+                </div>
+                <p class="text-xs text-gray-400 truncate">
+                  {{ user.currentAction }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live activity feed -->
+        <div class="flex-shrink-0 p-4 bg-gray-800 border-b border-gray-700">
+          <h3 class="mb-3 text-lg font-semibold text-white">
+            Actividad en vivo
+          </h3>
+
+          <div class="space-y-2 overflow-y-auto max-h-24">
+            <div
+              *ngFor="let activity of liveActivities; trackBy: trackByActivity"
+              class="flex items-center space-x-2 text-sm text-gray-300"
+            >
+              <div
+                [class]="getUserColor(activity.userId)"
+                class="flex-shrink-0 w-2 h-2 rounded-full"
+              ></div>
+              <span class="text-xs font-medium text-white">{{
+                activity.userName
+              }}</span>
+              <span class="text-xs">{{ activity.action }}</span>
+              <span class="text-xs text-gray-500">{{
+                getTimeAgo(activity.timestamp)
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="flex flex-col flex-1 min-h-0">
+          <!-- Chat header -->
+          <div
+            class="flex items-center justify-between flex-shrink-0 p-4 bg-gray-800 border-b border-gray-700"
+          >
+            <h3 class="text-lg font-semibold text-white">Chat Colaborativo</h3>
+            <div class="flex items-center space-x-2 text-sm text-gray-400">
+              <div
+                class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                aria-label="En línea"
+              ></div>
+              <span>En vivo</span>
+            </div>
+          </div>
+
+          <!-- Messages area -->
+          <div
+            class="flex-1 min-h-0 p-4 space-y-3 overflow-y-auto bg-gray-850"
+            role="log"
+            aria-label="Mensajes del chat"
+          >
+            <div
+              *ngFor="let message of chatMessages; trackBy: trackByMessage"
+              class="flex space-x-3 animate-fadeIn"
+              [class.flex-row-reverse]="message.userId === '1'"
+              [class.justify-center]="message.type === 'system'"
+            >
+              <!-- System messages -->
+              <div
+                *ngIf="message.type === 'system'"
+                class="px-3 py-1 text-xs text-gray-400 bg-gray-700 rounded-full"
+                role="status"
+                [attr.aria-label]="'Mensaje del sistema: ' + message.message"
+              >
+                {{ message.message }}
+              </div>
+
+              <!-- Regular messages -->
+              <ng-container *ngIf="message.type !== 'system'">
+                <!-- Avatar for others -->
+                <div
+                  *ngIf="message.userId !== '1'"
+                  [class]="getUserColor(message.userId)"
+                  class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-sm font-bold text-white rounded-full"
+                  [attr.aria-label]="'Avatar de ' + message.userName"
+                >
+                  {{ message.userName.charAt(0) }}
+                </div>
+
+                <!-- Message content -->
+                <div class="flex-1 max-w-xs">
+                  <div
+                    class="flex items-center mb-1 space-x-2"
+                    [class.justify-end]="message.userId === '1'"
+                  >
+                    <span class="text-sm font-medium text-white">{{
+                      message.userName
+                    }}</span>
+                    <span class="text-xs text-gray-500">{{
+                      getTimeAgo(message.timestamp)
+                    }}</span>
+                  </div>
+
+                  <div
+                    class="p-3 break-words rounded-lg"
+                    [class.bg-yellow-600]="message.userId === '1'"
+                    [class.text-gray-900]="message.userId === '1'"
+                    [class.bg-gray-700]="message.userId !== '1'"
+                    [class.text-gray-200]="message.userId !== '1'"
+                    [class.italic]="message.type === 'action'"
+                    [attr.aria-label]="
+                      message.type === 'action'
+                        ? 'Acción: ' + message.message
+                        : 'Mensaje: ' + message.message
+                    "
+                  >
+                    {{ message.message }}
+                  </div>
+                </div>
+
+                <!-- Own message avatar -->
+                <div
+                  *ngIf="message.userId === '1'"
+                  class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-sm font-bold text-gray-900 bg-yellow-500 rounded-full"
+                  [attr.aria-label]="'Tu avatar'"
+                >
+                  {{ message.userName.charAt(0) }}
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- Empty state when no messages -->
+            <div
+              *ngIf="chatMessages.length === 0"
+              class="py-8 text-center text-gray-500"
+            >
+              <p class="text-sm">No hay mensajes aún</p>
+              <p class="text-xs">¡Sé el primero en escribir algo!</p>
+            </div>
+          </div>
+
+          <!-- Message input area -->
+          <div class="flex-shrink-0 p-4 bg-gray-800 border-t border-gray-700">
+            <form class="flex space-x-3" (ngSubmit)="sendMessage()">
+              <div class="flex-1">
+                <label for="messageInput" class="sr-only"
+                  >Escribir mensaje</label
+                >
+                <input
+                  id="messageInput"
+                  [(ngModel)]="newMessage"
+                  name="messageInput"
+                  (keydown.enter)="sendMessage()"
+                  placeholder="Escribe un mensaje..."
+                  class="w-full px-4 py-3 text-white transition-all bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
+                  aria-label="Escribir mensaje en el chat colaborativo"
+                  maxlength="500"
+                />
+              </div>
+              <button
+                type="submit"
+                (click)="sendMessage()"
+                [disabled]="!newMessage.trim()"
+                class="flex items-center justify-center px-6 py-3 text-white transition-all bg-yellow-600 rounded-lg hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
+                aria-label="Enviar mensaje"
+                title="Enviar mensaje"
+              >
+                <app-icon name="chat" size="5"></app-icon>
+              </button>
+            </form>
+
+            <!-- Character counter -->
+            <div class="mt-2 text-right">
+              <span class="text-xs text-gray-500">
+                {{ newMessage.length || 0 }}/500
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

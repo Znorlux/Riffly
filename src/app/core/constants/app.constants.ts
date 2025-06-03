@@ -40,6 +40,13 @@ export const SIDEBAR_MENU = {
       active: false,
     },
     {
+      id: 'collaboration',
+      label: 'Colaboración',
+      icon: 'collaboration',
+      route: '/collaboration',
+      active: false,
+    },
+    {
       id: 'personalize',
       label: 'Personalize',
       icon: 'eye',
