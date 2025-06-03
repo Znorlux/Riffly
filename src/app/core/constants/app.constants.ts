@@ -27,14 +27,14 @@ export const SIDEBAR_MENU = {
   EXPLORE: [
     {
       id: 'featured',
-      label: 'Featured',
+      label: 'Destacados',
       icon: 'star',
       route: '/dashboard',
       active: true,
     },
     {
       id: 'following',
-      label: 'Following',
+      label: 'Siguiendo',
       icon: 'users',
       route: '/following',
       active: false,
@@ -48,7 +48,7 @@ export const SIDEBAR_MENU = {
     },
     {
       id: 'personalize',
-      label: 'Personalize',
+      label: 'Personalizar',
       icon: 'eye',
       route: '/personalize',
       active: false,
