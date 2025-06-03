@@ -1,0 +1,395 @@
+<div class="flex h-screen bg-gray-900">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main content -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Topbar -->
+    <app-topbar></app-topbar>
+
+    <!-- Learning content -->
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Left panel - Categories and Genres -->
+      <div class="flex flex-col w-1/3 overflow-hidden border-r border-gray-700">
+        <!-- Header -->
+        <div class="p-6 bg-gray-800 border-b border-gray-700">
+          <h1 class="mb-2 text-2xl font-bold text-white">
+            Aprendizaje Musical
+          </h1>
+          <p class="text-gray-400">
+            Mejora tus prompts y domina los géneros musicales
+          </p>
+        </div>
+
+        <!-- Categories -->
+        <div class="flex-1 p-4 overflow-y-auto">
+          <div class="space-y-4">
+            <div
+              *ngFor="let category of categories; trackBy: trackByCategory"
+              class="transition-all duration-200 bg-gray-800 border-2 rounded-lg cursor-pointer"
+              [class.border-yellow-500]="selectedCategory === category.id"
+              [class.border-gray-600]="selectedCategory !== category.id"
+              (click)="selectCategory(category.id)"
+              (keydown.enter)="selectCategory(category.id)"
+              (keydown.space)="selectCategory(category.id)"
+              tabindex="0"
+              role="button"
+              [attr.aria-pressed]="selectedCategory === category.id"
+              [attr.aria-label]="'Seleccionar categoría ' + category.name"
+            >
+              <!-- Category header -->
+              <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-3">
+                  <div class="p-2 bg-yellow-600 rounded-lg">
+                    <app-icon
+                      [name]="
+                        category.id === 'popular'
+                          ? 'star'
+                          : category.id === 'electronic'
+                          ? 'music'
+                          : category.id === 'urban'
+                          ? 'microphone'
+                          : 'collection'
+                      "
+                      size="5"
+                      class="text-gray-900"
+                    ></app-icon>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-white">
+                      {{ category.name }}
+                    </h3>
+                    <p class="text-sm text-gray-400">
+                      {{ category.description }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Genres in category -->
+              <div *ngIf="selectedCategory === category.id" class="p-4">
+                <div class="space-y-2">
+                  <div
+                    *ngFor="
+                      let genre of getGenresForCategory(category.id);
+                      trackBy: trackByGenre
+                    "
+                    class="p-3 transition-all duration-200 rounded-lg cursor-pointer hover:bg-gray-700"
+                    [class.bg-yellow-600]="selectedGenre === genre.id"
+                    [class.text-gray-900]="selectedGenre === genre.id"
+                    [class.bg-gray-700]="selectedGenre !== genre.id"
+                    [class.text-white]="selectedGenre !== genre.id"
+                    (click)="selectGenre(genre.id, $event)"
+                    (keydown.enter)="selectGenre(genre.id, $event)"
+                    (keydown.space)="selectGenre(genre.id, $event)"
+                    tabindex="0"
+                    role="button"
+                    [attr.aria-label]="'Seleccionar género ' + genre.name"
+                  >
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h4 class="font-medium">{{ genre.name }}</h4>
+                        <p class="text-xs opacity-80">
+                          {{ genre.description }}
+                        </p>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <span
+                          class="px-2 py-1 text-xs rounded-full"
+                          [class]="getDifficultyColor(genre.difficulty)"
+                          [style.background-color]="
+                            selectedGenre === genre.id
+                              ? 'rgba(0,0,0,0.1)'
+                              : 'rgba(255,255,255,0.1)'
+                          "
+                        >
+                          {{ genre.difficulty }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right panel - Genre details -->
+      <div
+        class="flex flex-col w-2/3 overflow-hidden"
+        *ngIf="getCurrentGenre() as genre"
+      >
+        <!-- Genre header -->
+        <div class="p-6 bg-gray-800 border-b border-gray-700">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center space-x-4">
+              <div
+                class="flex items-center justify-center w-16 h-16 text-2xl font-bold text-white rounded-lg"
+                [class]="genre.color"
+              >
+                {{ genre.name.charAt(0) }}
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-white">{{ genre.name }}</h2>
+                <p class="mt-1 text-gray-400">{{ genre.description }}</p>
+                <div class="flex items-center mt-2 space-x-4">
+                  <span class="text-sm text-gray-500">
+                    <strong>BPM:</strong> {{ genre.bpmRange }}
+                  </span>
+                  <span
+                    class="px-2 py-1 text-sm rounded-full"
+                    [class]="getDifficultyColor(genre.difficulty)"
+                    style="background-color: rgba(255, 255, 255, 0.1)"
+                  >
+                    {{ genre.difficulty }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content tabs -->
+        <div class="flex-1 overflow-y-auto">
+          <div class="p-6 space-y-8">
+            <!-- Características principales -->
+            <section>
+              <h3
+                class="flex items-center mb-4 text-xl font-semibold text-white"
+              >
+                <app-icon
+                  name="star"
+                  size="5"
+                  class="mr-2 text-yellow-500"
+                ></app-icon>
+                Características Principales
+              </h3>
+              <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div
+                  *ngFor="let characteristic of genre.characteristics"
+                  class="p-3 bg-gray-800 border border-gray-700 rounded-lg"
+                >
+                  <p class="text-gray-300">{{ characteristic }}</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Instrumentos típicos -->
+            <section>
+              <h3
+                class="flex items-center mb-4 text-xl font-semibold text-white"
+              >
+                <app-icon
+                  name="music"
+                  size="5"
+                  class="mr-2 text-blue-500"
+                ></app-icon>
+                Instrumentos Típicos
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let instrument of genre.instruments"
+                  class="px-3 py-1 text-sm text-blue-300 bg-blue-900 rounded-full"
+                >
+                  {{ instrument }}
+                </span>
+              </div>
+            </section>
+
+            <!-- Estructura de canción -->
+            <section>
+              <h3
+                class="flex items-center mb-4 text-xl font-semibold text-white"
+              >
+                <app-icon
+                  name="list"
+                  size="5"
+                  class="mr-2 text-green-500"
+                ></app-icon>
+                Estructura Típica
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let section of genre.structure; let i = index"
+                  class="flex items-center px-3 py-2 text-sm text-green-300 bg-green-900 rounded-lg"
+                >
+                  <span
+                    class="flex items-center justify-center w-6 h-6 mr-2 text-xs text-green-100 bg-green-700 rounded-full"
+                  >
+                    {{ i + 1 }}
+                  </span>
+                  {{ section }}
+                </span>
+              </div>
+            </section>
+
+            <!-- Tonalidades comunes -->
+            <section>
+              <h3
+                class="flex items-center mb-4 text-xl font-semibold text-white"
+              >
+                <app-icon
+                  name="collection"
+                  size="5"
+                  class="mr-2 text-purple-500"
+                ></app-icon>
+                Tonalidades Comunes
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let key of genre.keySignatures"
+                  class="px-3 py-1 text-sm text-purple-300 bg-purple-900 rounded-full"
+                >
+                  {{ key }}
+                </span>
+              </div>
+            </section>
+
+            <!-- Tips para prompts -->
+            <section>
+              <h3
+                class="flex items-center mb-4 text-xl font-semibold text-white"
+              >
+                <app-icon
+                  name="help-circle"
+                  size="5"
+                  class="mr-2 text-yellow-500"
+                ></app-icon>
+                Tips para Prompts Efectivos
+              </h3>
+              <div class="space-y-3">
+                <div
+                  *ngFor="let tip of genre.promptTips; let i = index"
+                  class="p-4 bg-yellow-900 border border-yellow-700 rounded-lg bg-opacity-20"
+                >
+                  <div class="flex items-start space-x-3">
+                    <div
+                      class="w-6 h-6 bg-yellow-600 text-yellow-100 rounded-full text-sm flex items-center justify-center flex-shrink-0 mt-0.5"
+                    >
+                      {{ i + 1 }}
+                    </div>
+                    <p class="text-yellow-200">{{ tip }}</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Ejemplos de prompts -->
+            <section>
+              <h3
+                class="flex items-center mb-4 text-xl font-semibold text-white"
+              >
+                <app-icon
+                  name="chat"
+                  size="5"
+                  class="mr-2 text-cyan-500"
+                ></app-icon>
+                Ejemplos de Prompts
+              </h3>
+              <div class="space-y-4">
+                <div
+                  *ngFor="
+                    let example of genre.examples;
+                    trackBy: trackByExample
+                  "
+                  class="overflow-hidden bg-gray-800 border border-gray-700 rounded-lg"
+                >
+                  <div class="p-4 border-b border-gray-700">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-lg font-medium text-white">
+                        {{ example.title }}
+                      </h4>
+                      <button
+                        (click)="copyPrompt(example.prompt)"
+                        class="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700"
+                        aria-label="Copiar prompt"
+                        title="Copiar prompt al portapapeles"
+                      >
+                        <app-icon name="download" size="4"></app-icon>
+                      </button>
+                    </div>
+                    <div class="flex flex-wrap gap-1 mt-2">
+                      <span
+                        *ngFor="let tag of example.tags"
+                        class="px-2 py-1 text-xs text-gray-300 bg-gray-700 rounded"
+                      >
+                        {{ tag }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="p-4">
+                    <div
+                      class="p-4 mb-3 bg-gray-900 border border-gray-600 rounded-lg"
+                    >
+                      <p
+                        class="font-mono text-sm leading-relaxed text-gray-300"
+                      >
+                        {{ example.prompt }}
+                      </p>
+                    </div>
+                    <p class="text-sm text-gray-400">
+                      {{ example.explanation }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Información adicional -->
+            <section>
+              <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <!-- Subgéneros -->
+                <div>
+                  <h3 class="mb-3 text-lg font-semibold text-white">
+                    Subgéneros
+                  </h3>
+                  <div class="space-y-2">
+                    <span
+                      *ngFor="let subgenre of genre.subgenres"
+                      class="block px-3 py-2 text-sm text-gray-300 bg-gray-800 rounded-lg"
+                    >
+                      {{ subgenre }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Artistas famosos -->
+                <div>
+                  <h3 class="mb-3 text-lg font-semibold text-white">
+                    Artistas Representativos
+                  </h3>
+                  <div class="space-y-2">
+                    <span
+                      *ngFor="let artist of genre.famousArtists"
+                      class="block px-3 py-2 text-sm text-gray-300 bg-gray-800 rounded-lg"
+                    >
+                      {{ artist }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state when no genre selected -->
+      <div
+        *ngIf="!getCurrentGenre()"
+        class="flex flex-col items-center justify-center w-2/3 p-8 text-center"
+      >
+        <div class="mb-4">
+          <app-icon name="music" size="16" class="text-gray-600"></app-icon>
+        </div>
+        <h3 class="mb-2 text-xl font-semibold text-gray-400">
+          Selecciona un género musical
+        </h3>
+        <p class="text-gray-500">
+          Elige una categoría y género para comenzar a aprender
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

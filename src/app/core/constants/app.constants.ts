@@ -60,6 +60,12 @@ export const SIDEBAR_MENU = {
       route: '/youtube-download',
       active: false,
     },
+    {
+      id: 'learning',
+      label: 'Aprendizaje',
+      route: '/learning',
+      icon: 'help-circle',
+    },
   ],
   LIBRARY: [
     {

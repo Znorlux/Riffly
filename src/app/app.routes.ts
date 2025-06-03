@@ -1,46 +1,24 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { FollowingComponent } from './pages/following/following.component';
 import { CreateComponent } from './pages/create/create.component';
-import { MyTracksComponent } from './pages/my-tracks/my-tracks.component';
 import { YouTubeDownloadComponent } from './pages/youtube-download/youtube-download.component';
-import { CollaborationComponent } from './pages/collaboration/collaboration.component';
-import { AuthGuard } from './guards/auth.guard';
-import { GuestGuard } from './guards/guest.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // ruta raíz - acceso público
-  {
-    path: 'login',
-    component: LoginComponent,
-    canActivate: [GuestGuard], // Solo usuarios no autenticados
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-    canActivate: [GuestGuard], // Solo usuarios no autenticados
-  },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard], // Solo usuarios autenticados
   },
   {
-    path: 'following',
-    component: FollowingComponent,
-    canActivate: [AuthGuard], // Solo usuarios autenticados
-  },
-  {
     path: 'create',
     component: CreateComponent,
-    canActivate: [AuthGuard], // Solo usuarios autenticados
-  },
-  {
-    path: 'my-tracks',
-    component: MyTracksComponent,
     canActivate: [AuthGuard], // Solo usuarios autenticados
   },
   {
@@ -50,8 +28,19 @@ export const routes: Routes = [
   },
   {
     path: 'collaboration',
-    component: CollaborationComponent,
-    canActivate: [AuthGuard], // Solo usuarios autenticados
+    loadComponent: () =>
+      import('./pages/collaboration/collaboration.component').then(
+        (m) => m.CollaborationComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'learning',
+    loadComponent: () =>
+      import('./pages/learning/learning.component').then(
+        (m) => m.LearningComponent
+      ),
+    canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: '' }, // todo lo demás va a home
 ];
