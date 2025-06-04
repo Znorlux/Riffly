@@ -2,7 +2,7 @@
 
 ![Riffly Banner](RifflyBanner.png)
 
-![Video Showcase](https://drive.google.com/file/d/1wW6BPskzPLeiXh3dyoZ9eeoyEsfobPZ_/view?usp=sharing)
+<iframe src="https://drive.google.com/file/d/1wW6BPskzPLeiXh3dyoZ9eeoyEsfobPZ_/preview" width="640" height="360" allow="autoplay"></iframe>
 
 ## 🌟 Descripción
 
