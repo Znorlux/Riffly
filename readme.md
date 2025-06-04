@@ -2,6 +2,8 @@
 
 ![Riffly Banner](RifflyBanner.png)
 
+![Video Showcase](https://drive.google.com/file/d/1wW6BPskzPLeiXh3dyoZ9eeoyEsfobPZ_/view?usp=sharing)
+
 ## 🌟 Descripción
 
 Riffly es una plataforma innovadora que combina la inteligencia artificial con la pasión por la música, permitiendo a los usuarios crear, compartir y colaborar en composiciones musicales únicas. Riffly lleva la generación de música con IA al siguiente nivel, fomentando una comunidad vibrante de músicos, productores y entusiastas de la música.
