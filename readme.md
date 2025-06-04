@@ -2,7 +2,7 @@
 
 ![Riffly Banner](RifflyBanner.png)
 
-[![Video Showcase](https://img.youtube.com/vi/1wW6BPskzPLeiXh3dyoZ9eeoyEsfobPZ_/maxresdefault.jpg)](https://drive.google.com/file/d/1wW6BPskzPLeiXh3dyoZ9eeoyEsfobPZ_/view)
+[Ver video Showcase de la app](https://drive.google.com/file/d/1wW6BPskzPLeiXh3dyoZ9eeoyEsfobPZ_/view)
 
 ## 🌟 Descripción
 
